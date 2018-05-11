@@ -4,7 +4,9 @@ namespace Caesar.AlternativeStuff
 {
     public interface ITry<T>
     {
-
+        bool IsEmpty { get; }
+        bool IsSuccess { get; }
+        bool IsFailure { get; }
         /*ITry<T> Of(Func<T> actionToTry);
 		ITry<T> Run(Action actionToTry);
 

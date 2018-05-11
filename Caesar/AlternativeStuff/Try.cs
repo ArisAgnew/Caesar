@@ -5,25 +5,22 @@ using System.Net.Sockets;
 using System.Dynamic;
 
 using static System.Boolean;
+using System.Reflection;
 
 namespace Caesar.AlternativeStuff
 {
-    public abstract class TryAbstract<T> : ITry<T>
-    {
-        private protected virtual bool IsEmpty { get; }
-        private protected virtual bool IsSuccess { get; }
-        private protected virtual bool IsFailure { get; }
+    //public abstract class TryAbstract<T> : ITry<T> { }
 
-        private protected virtual Exception GetCause() => null;
-    }
-
-    public sealed class Try<T> : TryAbstract<T>
+    public sealed class Try<T> //возможно сделать абстрактным а вызов сущностей будет осуществляться в классе наследнике
     {
-        //public static ITry<E> Failed<E>() where E : Exception //bad implementation it needs to think about how to improve it
-        //{
-        //    if (TryAbstract.IsEmpty)
+        //public ITry<E> Failed<E>() where E : Exception //bad implementation it needs to think about how to improve it
+        //{           
+        //    Type t = typeof(Success<>).GetType();
+        //    ITry<T> instance = (ITry<T>)Activator.CreateInstance<T>();
+
+        //    if (instance.IsFailure)
         //    {
-        //        return new Success<E> { SuccessValue = (E)GetCause() };
+        //        return new Success<E> { SuccessValue = (E) GetCause() };
         //    }
         //    else
         //    {
@@ -166,17 +163,19 @@ namespace Caesar.AlternativeStuff
     /// A succeeded Try class
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    sealed class Success<T> : TryAbstract<T>, ITry<T>
+    sealed class Success<T> : ITry<T>
     {
         public string StringPrefix => "Success";
 
         public T SuccessValue { get; set; }
 
-        private protected override Exception GetCause() => throw new NotSupportedException($"{nameof(GetCause)} for {StringPrefix}");
+        public Success() { }
 
-        private protected override bool IsEmpty => Parse(FalseString);
-        private protected override bool IsSuccess => Parse(TrueString);
-        private protected override bool IsFailure => Parse(FalseString);
+        public Exception GetCause() => throw new NotSupportedException($"{nameof(GetCause)} for {StringPrefix}");
+
+        public bool IsEmpty => Parse(FalseString);
+        public bool IsSuccess => Parse(TrueString);
+        public bool IsFailure => Parse(FalseString);
 
         public override string ToString() => $"{StringPrefix}({SuccessValue})";
         public override bool Equals(object obj) => obj == this || (obj is Success<T> && Equals(SuccessValue, (obj as Success<T>).SuccessValue));
@@ -187,17 +186,19 @@ namespace Caesar.AlternativeStuff
     /// A failed Try class
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    sealed class Failure<T> : TryAbstract<T>, ITry<T>
+    sealed class Failure<T> : ITry<T>
     {
         public string StringPrefix => "Failure";
 
         public Exception FailureCause { get; set; }
 
-        private protected override Exception GetCause() => FailureCause.GetBaseException();
+        public Failure() { }
 
-        private protected override bool IsEmpty => Parse(TrueString);
-        private protected override bool IsSuccess => Parse(FalseString);
-        private protected override bool IsFailure => Parse(TrueString);
+        public Exception GetCause() => FailureCause.GetBaseException();
+
+        public bool IsEmpty => Parse(TrueString);
+        public bool IsSuccess => Parse(FalseString);
+        public bool IsFailure => Parse(TrueString);
 
         public override string ToString() => $"{StringPrefix}({FailureCause.GetBaseException()})";
         public override bool Equals(object obj) => obj == this || (obj is Success<T> && Equals(FailureCause, (obj as Failure<T>).FailureCause));
