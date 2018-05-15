@@ -38,15 +38,13 @@ namespace Caesar.AlternativeStuff
         public T OrElseGet(Func<T> getOther) => HasValue ? value : getOther();
         public T OrElseThrow<E>(Func<E> exceptionSupplier) where E : Exception => HasValue ? value : throw exceptionSupplier();
 
-        public static explicit operator T(Optional<T> optional) => OfNullable((T) optional).Get();
+        public static explicit operator T(Optional<T> optional) => optional.RequireNonNull().Get();
         public static implicit operator Optional<T>(T optional) => OfNullable(optional);
 
         public override bool Equals(object obj)
         {
             if (obj is Optional<T>) return true;
-
             if (!(obj is Optional<T>)) return false;
-
             return Equals(value, (obj as Optional<T>).value);
         }
 

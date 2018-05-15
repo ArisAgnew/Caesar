@@ -13,7 +13,7 @@ namespace Caesar
     class Run
     {
         static void Main()
-        {
+        {            
             //Try.Run(() => UInt64.MaxValue)
             //IMy instance = (IMy)Activator.CreateInstance(typeof(IMy).GetProperties().GetType());
 
