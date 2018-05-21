@@ -30,16 +30,47 @@ namespace Caesar.AlternativeStuff
 			? Optional<IOption<TOut>>.OfNullable(select.RequireNonNull()(value)) 
 			: Optional<IOption<TOut>>.Empty();
 
+        #region The set of 'Gets' different overload methods
         public T Get() => value;
-        public T GetCustomized(Func<T, T> getCustomized) => getCustomized.RequireNonNull()(value);
-        public U GetCustomized<U>(Func<T, U> getCustomized) => getCustomized.RequireNonNull()(value);
+        public T GetCustomized(Func<T, T> funcCustom) => funcCustom.Invoke(value);
+        public dynamic GetCustomized(Func<T, dynamic> funcCustom) => funcCustom.RequireNonNull()(value);
 
+        public (T, dynamic) GetTupleCustomized(Func<T, dynamic> funcTupleCustom) => 
+            (Get(), GetCustomized(funcTupleCustom));
+
+        public (T, (dynamic, dynamic)) GetTupleCustomized(TupleDelegate<T, dynamic, dynamic> funcTupleCustom) => 
+            (Get(), funcTupleCustom.RequireNonNull()(value));
+
+        public (T, (dynamic, dynamic, dynamic)) GetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic> funcTupleCustom) => 
+            (Get(), funcTupleCustom.RequireNonNull()(value));
+
+        public (T, (dynamic, dynamic, dynamic, dynamic)) GetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic, dynamic> funcTupleCustom) => 
+            (Get(), funcTupleCustom.RequireNonNull()(value));
+
+        public (T, (dynamic, dynamic, dynamic, dynamic, dynamic)) GetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic, dynamic, dynamic> funcTupleCustom) => 
+            (Get(), funcTupleCustom.RequireNonNull()(value));
+        #endregion
+
+        #region The set of 'OrElseGets' different overload methods
         public T OrElse(T other) => HasValue ? value : other.RequireNonNull();
         public T OrElseGet(Func<T> getOther) => HasValue ? value : getOther.RequireNonNull()();
-        public T OrElseGetCustomized(Func<T, T> elseGetCustomized) => HasValue ? value : elseGetCustomized.RequireNonNull()(value);
-        public dynamic OrElseGetCustomized<U>(Func<T, dynamic> elseGetCustomized) => HasValue ? value : elseGetCustomized.RequireNonNull()(value);
+        public T OrElseGetCustomized(Func<T, T> funcElseCustom) => HasValue ? value : funcElseCustom.RequireNonNull()(value);
+        public dynamic OrElseGetCustomized(Func<T, dynamic> funcElseCustom) => HasValue ? value : funcElseCustom.RequireNonNull()(value);
         
+        public (dynamic, dynamic) OrElseGetTupleCustomized(TupleDelegate<T, dynamic, dynamic> funcTupleCustom) => 
+            HasValue ? (value, default(int)) : funcTupleCustom.RequireNonNull()(value);
+
+        public (dynamic, dynamic, dynamic) OrElseGetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic> funcTupleCustom) =>
+            HasValue ? (value, default(int), default(int)) : funcTupleCustom.RequireNonNull()(value);
+
+        public (dynamic, dynamic, dynamic, dynamic) OrElseGetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic, dynamic> funcTupleCustom) =>
+            HasValue ? (value, default(int), default(int), default(int)) : funcTupleCustom.RequireNonNull()(value);
+
+        public (dynamic, dynamic, dynamic, dynamic, dynamic) OrElseGetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic, dynamic, dynamic> funcTupleCustom) =>
+            HasValue ? (value, default(int), default(int), default(int), default(int)) : funcTupleCustom.RequireNonNull()(value);
+
         public T OrElseThrow<E>(Func<E> exceptionSupplier) where E : Exception => HasValue ? value : throw exceptionSupplier();
+        #endregion
 
         public static explicit operator T(Optional<T> optional) => optional.RequireNonNull().Get();
         public static implicit operator Optional<T>(T optional) => OfNullable(optional);
@@ -54,4 +85,9 @@ namespace Caesar.AlternativeStuff
         public override int GetHashCode() => base.GetHashCode();
         public override string ToString() => HasValue ? $"Optional has <{value}>" : $"Optional has no any value: <{value}>";
     }
+
+    public delegate (T1, T2) TupleDelegate<in T, T1, T2>(T entryType);
+    public delegate (T1, T2, T3) TupleDelegate<in T, T1, T2, T3>(T entryType);
+    public delegate (T1, T2, T3, T4) TupleDelegate<in T, T1, T2, T3, T4>(T entryType);
+    public delegate (T1, T2, T3, T4, T5) TupleDelegate<in T, T1, T2, T3, T4, T5>(T entryType);
 }

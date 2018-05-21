@@ -81,6 +81,6 @@ namespace Caesar.AlternativeStuff
         /// <typeparam name="U"></typeparam>
         /// <param name="customized"></param>
         /// <returns></returns>
-        U GetCustomized<U>(Func<T, U> customized);
+        dynamic GetCustomized(Func<T, dynamic> customized);
     }
 }
