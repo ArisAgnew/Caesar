@@ -10,8 +10,8 @@ namespace Caesar.FactoryAssembly
         public static Action<T> ForwardCompose<T>(this Action<T> first, Action<T> next) => 
             (T type) => 
             {
-                first.RequireNonNull().Invoke(type);
-                next.RequireNonNull().Invoke(type);
+                first.RequireNonNull()(type);
+                next.RequireNonNull()(type);
             };
     }
 }
