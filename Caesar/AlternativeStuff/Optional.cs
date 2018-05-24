@@ -34,21 +34,21 @@ namespace Caesar.AlternativeStuff
         #region The set of 'Gets' different overload methods
         public T Get() => value;
         public T GetCustomized(Func<T, T> funcCustom) => funcCustom.Invoke(value);
-        public dynamic GetCustomized(Func<T, dynamic> funcCustom) => funcCustom.RequireNonNull()(value);
+        public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom.RequireNonNull()(value);
 
-        public (T, dynamic) GetTupleCustomized(Func<T, dynamic> funcTupleCustom) => 
-            (Get(), GetCustomized(funcTupleCustom));
-
-        public (T, (dynamic, dynamic)) GetTupleCustomized(TupleDelegate<T, dynamic, dynamic> funcTupleCustom) => 
+        public (T, V) GetTupleCustomized1<V>(Func<T, V> funcTupleCustom) => 
             (Get(), funcTupleCustom.RequireNonNull()(value));
 
-        public (T, (dynamic, dynamic, dynamic)) GetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic> funcTupleCustom) => 
+        public (T, (V, W)) GetTupleCustomized2<V, W>(TupleDelegate<T, V, W> funcTupleCustom) =>
             (Get(), funcTupleCustom.RequireNonNull()(value));
 
-        public (T, (dynamic, dynamic, dynamic, dynamic)) GetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic, dynamic> funcTupleCustom) => 
+        public (T, (V, W, X)) GetTupleCustomized3<V, W, X>(TupleDelegate<T, V, W, X> funcTupleCustom) => 
             (Get(), funcTupleCustom.RequireNonNull()(value));
 
-        public (T, (dynamic, dynamic, dynamic, dynamic, dynamic)) GetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic, dynamic, dynamic> funcTupleCustom) => 
+        public (T, (V, W, X, Y)) GetTupleCustomized4<V, W, X, Y>(TupleDelegate<T, V, W, X, Y> funcTupleCustom) => 
+            (Get(), funcTupleCustom.RequireNonNull()(value));
+
+        public (T, (V, W, X, Y, Z)) GetTupleCustomized5<V, W, X, Y, Z>(TupleDelegate<T, V, W, X, Y, Z> funcTupleCustom) => 
             (Get(), funcTupleCustom.RequireNonNull()(value));
         #endregion
 
@@ -56,19 +56,21 @@ namespace Caesar.AlternativeStuff
         public T OrElse(T other) => HasValue ? value : other.RequireNonNull();
         public T OrElseGet(Func<T> getOther) => HasValue ? value : getOther.RequireNonNull()();
         public T OrElseGetCustomized(Func<T, T> funcElseCustom) => HasValue ? value : funcElseCustom.RequireNonNull()(value);
-        public dynamic OrElseGetCustomized(Func<T, dynamic> funcElseCustom) => HasValue ? value : funcElseCustom.RequireNonNull()(value);
         
-        public (dynamic, dynamic) OrElseGetTupleCustomized(TupleDelegate<T, dynamic, dynamic> funcTupleCustom) => 
-            HasValue ? (value, default(int)) : funcTupleCustom.RequireNonNull()(value);
+        public (T, V) OrElseGetTupleCustomized1<V>(Func<T, V> funcElseCustom) => 
+            HasValue ? (value, default(V)) : (default(T), funcElseCustom.RequireNonNull()(value));
 
-        public (dynamic, dynamic, dynamic) OrElseGetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic> funcTupleCustom) =>
-            HasValue ? (value, default(int), default(int)) : funcTupleCustom.RequireNonNull()(value);
+        public (T, (V, W)) OrElseGetTupleCustomized2<V, W>(TupleDelegate<T, V, W> funcTupleCustom) =>
+            HasValue ? (value, (default(V), default(W))) : (default(T), funcTupleCustom.RequireNonNull()(value));
 
-        public (dynamic, dynamic, dynamic, dynamic) OrElseGetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic, dynamic> funcTupleCustom) =>
-            HasValue ? (value, default(int), default(int), default(int)) : funcTupleCustom.RequireNonNull()(value);
+        public (T, (V, W, X)) OrElseGetTupleCustomized3<V, W, X>(TupleDelegate<T, V, W, X> funcTupleCustom) =>
+            HasValue ? (value, (default(V), default(W), default(X))) : (default(T), funcTupleCustom.RequireNonNull()(value));
 
-        public (dynamic, dynamic, dynamic, dynamic, dynamic) OrElseGetTupleCustomized(TupleDelegate<T, dynamic, dynamic, dynamic, dynamic, dynamic> funcTupleCustom) =>
-            HasValue ? (value, default(int), default(int), default(int), default(int)) : funcTupleCustom.RequireNonNull()(value);
+        public (T, (V, W, X, Y)) OrElseGetTupleCustomized4<V, W, X, Y>(TupleDelegate<T, V, W, X, Y> funcTupleCustom) =>
+            HasValue ? (value, (default(V), default(W), default(X), default(Y))) : (default(T), funcTupleCustom.RequireNonNull()(value));
+
+        public (T, (V, W, X, Y, Z)) OrElseGetTupleCustomized5<V, W, X, Y, Z>(TupleDelegate<T, V, W, X, Y, Z> funcTupleCustom) =>
+            HasValue ? (value, (default(V), default(W), default(X), default(Y), default(Z))) : (default(T), funcTupleCustom.RequireNonNull()(value));
 
         public T OrElseThrow<E>(Func<E> exceptionSupplier) where E : Exception => HasValue ? value : throw exceptionSupplier();
         #endregion
