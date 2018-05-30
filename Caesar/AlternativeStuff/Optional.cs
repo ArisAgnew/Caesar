@@ -5,51 +5,50 @@ namespace Caesar.AlternativeStuff
 {
     public sealed class Optional<T> : IOption<T>
     {
-        private static readonly Optional<T> EMPTY = new Optional<T>();
+        private static readonly Optional<T> EMPTY = new Optional<T>(default);
         private readonly T value;
 
-        private Optional() => value = default;
         private Optional(T arg) => value = arg.RequireNonNull("Value should be presented");
 
         public static Optional<T> Empty() => EMPTY;
         public static Optional<T> Of(T arg) => new Optional<T>(arg);
-		public static Optional<T> OfNullable(T arg) => arg != null ? Of(arg) : Empty();
-		public static Optional<T> OfNullable(Func<T> outputArg) => outputArg != null ? Of(outputArg()) : Empty();
+		public static Optional<T> OfNullable(T arg) => arg != null ? Of(arg) : EMPTY;
+		public static Optional<T> OfNullable(Func<T> outputArg) => outputArg != null ? Of(outputArg()) : EMPTY;
 
 		public bool HasValue => value != null;
 
         public void ForValuePresented(Action<T> action) => action.RequireNonNull()(value);
 
         public IOption<T> Where(Predicate<T> predicate) => HasValue 
-            ? predicate.RequireNonNull()(value) ? this : Empty() : this;
+            ? predicate.RequireNonNull()(value) ? this : EMPTY : this;
 
         public IOption<TOut> Select<TOut>(Func<T, TOut> select) => HasValue 
             ? Optional<TOut>.OfNullable(select.RequireNonNull()(value)) 
-            : Optional<TOut>.Empty();
+            : Optional<TOut>.EMPTY;
 
         public IOption<IOption<TOut>> SelectMany<TOut>(Func<T, IOption<TOut>> select) => HasValue 
 			? Optional<IOption<TOut>>.OfNullable(select.RequireNonNull()(value)) 
-			: Optional<IOption<TOut>>.Empty();
+			: Optional<IOption<TOut>>.EMPTY;
 
         #region The set of 'Gets' different overload methods
         public T Get() => value;
-        public T GetCustomized(Func<T, T> funcCustom) => funcCustom.Invoke(value);
+        public T GetCustomized(Func<T, T> funcCustom) => funcCustom.RequireNonNull()(value);
         public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom.RequireNonNull()(value);
 
         public (T, V) GetTupleCustomized<V>(Func<T, V> funcTupleCustom) => 
-            (Get(), funcTupleCustom.RequireNonNull()(value));
+            (value, funcTupleCustom.RequireNonNull()(value));
 
         public (T, (V, W)) GetTupleCustomized2<V, W>(TupleDelegate<T, V, W> funcTupleCustom) =>
-            (Get(), funcTupleCustom.RequireNonNull()(value));
+            (value, funcTupleCustom.RequireNonNull()(value));
 
         public (T, (V, W, X)) GetTupleCustomized3<V, W, X>(TupleDelegate<T, V, W, X> funcTupleCustom) => 
-            (Get(), funcTupleCustom.RequireNonNull()(value));
+            (value, funcTupleCustom.RequireNonNull()(value));
 
         public (T, (V, W, X, Y)) GetTupleCustomized4<V, W, X, Y>(TupleDelegate<T, V, W, X, Y> funcTupleCustom) => 
-            (Get(), funcTupleCustom.RequireNonNull()(value));
+            (value, funcTupleCustom.RequireNonNull()(value));
 
         public (T, (V, W, X, Y, Z)) GetTupleCustomized5<V, W, X, Y, Z>(TupleDelegate<T, V, W, X, Y, Z> funcTupleCustom) => 
-            (Get(), funcTupleCustom.RequireNonNull()(value));
+            (value, funcTupleCustom.RequireNonNull()(value));
         #endregion
 
         #region The set of 'OrElseGets' different overload methods
