@@ -7,7 +7,7 @@ namespace SwitchCase
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="T"></typeparam>    /// 
+    /// <typeparam name="T"></typeparam> 
     /// <remarks>
     /// 
     /// In C# 6, the match expression must be an expression that returns a value of the following types:
@@ -33,6 +33,10 @@ namespace SwitchCase
         public static Switch<T> OfNullable(Func<T> outputArg) => outputArg != null ? Of(outputArg()) : Empty;
 
         public static Switch<T> SwitchDefaultAccess => new Switch<T>();
+
+        public T Get() => value;
+        public T GetCustomized(Func<T, T> funcCustom) => funcCustom(value);
+        public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom(value);
 
         public Case<T> Case { get; private set; }
         public Default<T> Default { get; private set; }

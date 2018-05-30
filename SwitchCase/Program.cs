@@ -6,13 +6,14 @@ namespace SwitchCase
     {
         static void Main(string[] args)
         {
-            Switch<int>.Of(5)
+            int j = 10;
+            /*Switch<int>.Of(j)
                 .Case.Of().Then()
                 .Case.Of().Then()
                 .Case.Of().When().Then()
                 .Case.Of().When().Then()
                 .Case.Of().When().Then()
-                .Default.Then();
+                .Default.Then();*/
         }
     }
 }
