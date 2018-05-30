@@ -21,7 +21,7 @@ namespace Caesar.AlternativeStuff
         T GetCustomized(Func<T, T> customized);
         V GetCustomized<V>(Func<T, V> funcCustom);
 
-        (T, V) GetTupleCustomized1<V>(Func<T, V> funcTupleCustom);
+        (T, V) GetTupleCustomized<V>(Func<T, V> funcTupleCustom);
         (T, (V, W)) GetTupleCustomized2<V, W>(TupleDelegate<T, V, W> funcTupleCustom);
         (T, (V, W, X)) GetTupleCustomized3<V, W, X>(TupleDelegate<T, V, W, X> funcTupleCustom);
         (T, (V, W, X, Y)) GetTupleCustomized4<V, W, X, Y>(TupleDelegate<T, V, W, X, Y> funcTupleCustom);
@@ -30,7 +30,7 @@ namespace Caesar.AlternativeStuff
         T OrElse(T other);        
         T OrElseGet(Func<T> getOther);
 
-        (T, V) OrElseGetTupleCustomized1<V>(Func<T, V> funcElseCustom);
+        (T, V) OrElseGetTupleCustomized<V>(Func<T, V> funcElseCustom);
         (T, (V, W)) OrElseGetTupleCustomized2<V, W>(TupleDelegate<T, V, W> funcTupleCustom);
         (T, (V, W, X)) OrElseGetTupleCustomized3<V, W, X>(TupleDelegate<T, V, W, X> funcTupleCustom);
         (T, (V, W, X, Y)) OrElseGetTupleCustomized4<V, W, X, Y>(TupleDelegate<T, V, W, X, Y> funcTupleCustom);

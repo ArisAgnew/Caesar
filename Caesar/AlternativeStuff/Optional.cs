@@ -36,7 +36,7 @@ namespace Caesar.AlternativeStuff
         public T GetCustomized(Func<T, T> funcCustom) => funcCustom.Invoke(value);
         public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom.RequireNonNull()(value);
 
-        public (T, V) GetTupleCustomized1<V>(Func<T, V> funcTupleCustom) => 
+        public (T, V) GetTupleCustomized<V>(Func<T, V> funcTupleCustom) => 
             (Get(), funcTupleCustom.RequireNonNull()(value));
 
         public (T, (V, W)) GetTupleCustomized2<V, W>(TupleDelegate<T, V, W> funcTupleCustom) =>
@@ -57,7 +57,7 @@ namespace Caesar.AlternativeStuff
         public T OrElseGet(Func<T> getOther) => HasValue ? value : getOther.RequireNonNull()();
         public T OrElseGetCustomized(Func<T, T> funcElseCustom) => HasValue ? value : funcElseCustom.RequireNonNull()(value);
         
-        public (T, V) OrElseGetTupleCustomized1<V>(Func<T, V> funcElseCustom) => 
+        public (T, V) OrElseGetTupleCustomized<V>(Func<T, V> funcElseCustom) => 
             HasValue ? (value, default(V)) : (default(T), funcElseCustom.RequireNonNull()(value));
 
         public (T, (V, W)) OrElseGetTupleCustomized2<V, W>(TupleDelegate<T, V, W> funcTupleCustom) =>

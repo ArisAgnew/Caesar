@@ -13,7 +13,26 @@ namespace Caesar
     class Run
     {
         static void Main()
-        {            
+        {
+            string[] strs = new string[] { "one", "two", "three", "four", "five" };
+            var tuple = Optional<string[]>.OfNullable(strs).Select(delegate (string[] array)
+            {
+                return array.Where(each => each.Length > 3);
+            }).GetTupleCustomized(arr =>
+            (
+                arr.ToArray()[0],
+                arr.ToArray()[1],
+                arr.ToArray()[2]
+            )).ToTuple(); //var (_, (a, b, c))
+
+            WriteLine();
+
+            Optional<string[]>.OfNullable(strs).Select(delegate (string[] array)
+            {
+                return array.Where(arr => arr.Length > 3);
+            }).ForValuePresented(s => s.ToList().ForEach(s1 => WriteLine(s1)));
+            ReadLine();
+
             //Try.Run(() => UInt64.MaxValue)
             //IMy instance = (IMy)Activator.CreateInstance(typeof(IMy).GetProperties().GetType());
 
