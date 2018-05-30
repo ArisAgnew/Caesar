@@ -37,6 +37,7 @@ namespace SwitchCase
         public Case<T> Case { get; private set; }
         public Default<T> Default { get; private set; }
 
+        //Builder
         //public ISwitchCaseDefault<T> EndWith => new Default<T>(); //new Default<T>(); //explicit operator ?
 
     }

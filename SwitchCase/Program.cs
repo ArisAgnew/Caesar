@@ -12,7 +12,7 @@ namespace SwitchCase
                 .Case.Of().When().Then()
                 .Case.Of().When().Then()
                 .Case.Of().When().Then()
-                .Default.Of().Then();                
+                .Default.Then();
         }
     }
 }
