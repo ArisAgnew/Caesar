@@ -22,6 +22,7 @@ namespace SwitchCase
             return this;
         }
 
+        public Switch<T> Accomplish(Action func, bool? enableBreak) => default;
         public Switch<T> Accomplish(Func<T> func, bool? enableBreak)
         {
             if (caseValue.Equals(default) & caseValue.Equals(switchValue))

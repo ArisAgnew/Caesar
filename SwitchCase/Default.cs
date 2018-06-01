@@ -6,6 +6,7 @@ namespace SwitchCase
 {
     public class Default<T> : ISwitchCaseDefault<T>
     {
-        public Switch<T> Then() => default; //Builder thereafter
+        public Builder<T> Accomplish(Action action, bool? enableBreak) => default; //Builder thereafter
+        public Builder<T> Accomplish(Func<T> func, bool? enableBreak) => default;
     }
 }
