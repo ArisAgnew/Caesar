@@ -8,6 +8,7 @@ namespace SwitchCase
     {
         ISwitchCaseDefault<T> @switch = Switch<T>.SwitchDefaultAccess;
 
+        private protected T switchValue = Switch<T>.SwitchDefaultAccess.Get();
         private protected T caseValue = default;
 
         public Case<T> Of(T arg)
@@ -21,28 +22,21 @@ namespace SwitchCase
             return this;
         }
 
-        public Switch<T> Then(Func<T> func, bool? enableBreak, bool? enableGoTo)
+        public Switch<T> Accomplish(Func<T> func, bool? enableBreak)
         {
-            if (enableBreak.HasValue) //true
+            if (caseValue.Equals(default) & caseValue.Equals(switchValue))
             {
-                if (!enableGoTo.HasValue) //false
+                if (enableBreak.HasValue) //true
                 {
                     func?.Invoke();
+                    //return build 
                     //break;
-                }
-            }
-            else //false
-            {
-                if (enableGoTo.HasValue) //true
-                {
-                    func?.Invoke();
-                    //goto logic;
                 }
                 else //false
                 {
                     func?.Invoke();
                 }
-            }
+            }            
             return (Switch<T>)@switch;
         }
     }
