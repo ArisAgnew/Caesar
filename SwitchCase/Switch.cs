@@ -19,7 +19,7 @@ namespace SwitchCase
     /// 
     /// Starting with C# 7.0, the match expression can be any non-null expression.
     /// </remarks>
-    public sealed class Switch<T> : ISwitchCaseDefault<T>
+    public class Switch<T> : ISwitchCaseDefault<T>
     {
         private static readonly Switch<T> EMPTY = new Switch<T>(default);
         private readonly T value;
@@ -38,8 +38,8 @@ namespace SwitchCase
         public T GetCustomized(Func<T, T> funcCustom) => funcCustom(value);
         public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom(value);
 
-        public Case<T> Case { get; private set; }
-        public Default<T> Default { get; private set; }
+        public ISwitchCaseDefault<T> Case { get; private set; }
+        public ISwitchCaseDefault<T> Default { get; private set; }
 
         //Builder
         //public ISwitchCaseDefault<T> EndWith => new Default<T>(); //new Default<T>(); //explicit operator ?

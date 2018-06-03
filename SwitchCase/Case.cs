@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace SwitchCase
@@ -11,34 +12,37 @@ namespace SwitchCase
         private protected T switchValue = Switch<T>.SwitchDefaultAccess.Get();
         private protected T caseValue = default;
 
-        public Case<T> Of(T arg)
+        private protected static IList<T> regularList = new List<T>();
+
+        public ReadOnlyCollection<T> ImmutableValueList => new ReadOnlyCollection<T>(regularList);
+        public T CaseValue => caseValue;
+
+        public virtual Case<T> Of(T arg)
         {
             caseValue = arg;
             return this;
         }
 
-        public Case<T> When()
-        {
-            return this;
-        }
+        public virtual Case<T> When() => this;
 
-        public Switch<T> Accomplish(Action func, bool? enableBreak) => default;
-        public Switch<T> Accomplish(Func<T> func, bool? enableBreak)
+        public Switch<T> Accomplish(Action action, bool enableBreak)
         {
             if (caseValue.Equals(default) & caseValue.Equals(switchValue))
             {
-                if (enableBreak.HasValue) //true
+                if (enableBreak) //true
                 {
-                    func?.Invoke();
-                    //return build 
-                    //break;
+                    action?.Invoke();
+                    return new Breaker<T>();
                 }
                 else //false
                 {
-                    func?.Invoke();
+                    action?.Invoke();
                 }
-            }            
-            return (Switch<T>)@switch;
+            }
+            return Switch<T>.SwitchDefaultAccess;
         }
+
+        public Switch<T> Accomplish(Func<T> func, bool enableBreak) => default;
+        public Switch<T> Accomplish(Func<T, T> func, bool enableBreak) => default;
     }
 }

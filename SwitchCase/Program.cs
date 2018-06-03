@@ -1,4 +1,5 @@
 ﻿using System;
+using static System.Console;
 
 namespace SwitchCase
 {
@@ -7,19 +8,12 @@ namespace SwitchCase
         static void Main(string[] args)
         {
             int j = 10;
-            /*Switch<int>.Of(j)
-                .Case.Of().Then()
-                .Case.Of().Then()
-                .Case.Of().When().Then()
-                .Case.Of().When().Then()
-                .Case.Of().When().Then()
-                .Default.Then();*/
 
             Switch<int>.Of(j)
-                .Case.Of(1).Accomplish(delegate() { return default }, false)
-                .Case.Of(2).Accomplish(delegate() { return default }, false)
-                .Default.Accomplish(delegate() { }, false)
-                .Build();
+                .Case.Of(1).Accomplish(() => WriteLine("One"), false)
+                .Case.Of(2).Accomplish(() => WriteLine("Two"), false)
+                .Default.Accomplish(() => WriteLine("Default"), false)
+                .BuildUp();
         }
     }
 }

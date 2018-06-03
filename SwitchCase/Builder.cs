@@ -6,6 +6,6 @@ namespace SwitchCase
 {
     public class Builder<T> : ISwitchCaseDefault<T>
     {
-        public Switch<T> Build() => Switch<T>.SwitchDefaultAccess;
+        public Switch<T> BuildUp() => Switch<T>.SwitchDefaultAccess;
     }
 }
