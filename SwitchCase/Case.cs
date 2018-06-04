@@ -7,9 +7,6 @@ namespace SwitchCase
 {
     public class Case<T> : ISwitchCaseDefault<T>
     {
-        ISwitchCaseDefault<T> @switch = Switch<T>.SwitchDefaultAccess;
-
-        private protected T switchValue = Switch<T>.SwitchDefaultAccess.Get();
         private protected T caseValue = default;
 
         private protected static IList<T> regularList = new List<T>();
@@ -25,9 +22,10 @@ namespace SwitchCase
 
         public virtual Case<T> When() => this;
 
-        public Switch<T> Accomplish(Action action, bool enableBreak)
+        /*public Switch<T> Accomplish(Action action, bool enableBreak)
         {
-            if (caseValue.Equals(default) & caseValue.Equals(switchValue))
+            
+            if (!caseValue.Equals(default) & caseValue.Equals(switchValue))
             {
                 if (enableBreak) //true
                 {
@@ -39,10 +37,10 @@ namespace SwitchCase
                     action?.Invoke();
                 }
             }
-            return Switch<T>.SwitchDefaultAccess;
-        }
+            else return new Switch<T>();           
+        }*/
 
-        public Switch<T> Accomplish(Func<T> func, bool enableBreak) => default;
-        public Switch<T> Accomplish(Func<T, T> func, bool enableBreak) => default;
+        //public Switch<T> Accomplish(Func<T> func, bool enableBreak) => default;
+        //public Switch<T> Accomplish(Func<T, T> func, bool enableBreak) => default;
     }
 }

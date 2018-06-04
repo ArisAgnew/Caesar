@@ -22,24 +22,110 @@ namespace SwitchCase
     public class Switch<T> : ISwitchCaseDefault<T>
     {
         private static readonly Switch<T> EMPTY = new Switch<T>(default);
-        private readonly T value;
+        private T _value;
 
-        private Switch() { }
-        private Switch(T arg) => value = arg;
+        public Switch() { }
+        public Switch(T arg) => _value = arg;
                 
         public static Switch<T> Empty => EMPTY;
         public static Switch<T> Of(T arg) => new Switch<T>(arg);
         public static Switch<T> OfNullable(T arg) => arg != null ? Of(arg) : Empty;
         public static Switch<T> OfNullable(Func<T> outputArg) => outputArg != null ? Of(outputArg()) : Empty;
 
-        public static Switch<T> SwitchDefaultAccess => new Switch<T>();
+        protected bool IsPresent => _value != null || !_value.Equals(default(T));
 
-        public T Get() => value;
-        public T GetCustomized(Func<T, T> funcCustom) => funcCustom(value);
-        public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom(value);
+        protected void IfPresent(Action action)
+        {
+            if (IsPresent)
+                action?.Invoke();
+        }
 
-        public ISwitchCaseDefault<T> Case { get; private set; }
-        public ISwitchCaseDefault<T> Default { get; private set; }
+        protected void IfPresent(Action<T> action)
+        {
+            if (IsPresent)
+                action?.Invoke(_value);
+        }
+
+        public T Value
+        {
+            get => _value;
+            set => value = _value;
+        }
+
+        public ref T GetByRef()
+        {
+            ref T ref_value = ref _value;
+            return ref ref_value;
+        }        
+
+        public T GetCustomized(Func<T, T> funcCustom) => funcCustom(_value);
+        public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom(_value);
+
+        public Case<T> Case => new Case<T>();
+        //public Default<T> Default => new Default<T>();
+
+        private protected T caseValue = default;
+
+        public Switch<T> CaseOf(T t)
+        {
+            caseValue = t;
+            return this;
+        }
+
+        public Switch<T> DefaultTo
+        {
+            get
+            {
+                
+                return new Switch<T>();
+            }
+        }
+
+        private Switch<T> Breaker()
+        {
+            Console.WriteLine($"It has been broken with the matched value:" +
+                $" {Value}");
+            _value = default;
+            return this;
+        }
+
+        public Switch<T> Accomplish(Action action, bool enableBreak)
+        {
+            if (!caseValue.Equals(default) && caseValue.Equals(Value))
+            {
+                if (enableBreak && IsPresent) //true
+                {
+                    IfPresent(action);
+                    return Breaker();                    
+                }
+                else //false
+                {
+                    IfPresent(action);
+                    return this;
+                }
+            }
+            else return this;
+        }
+
+        public Builder<T> AccomplishDefault(Action action, bool enableBreak)
+        {
+            if (!caseValue.Equals(default) && caseValue.Equals(Value))
+            {
+                if (enableBreak && IsPresent) //true
+                {
+                    IfPresent(action);
+                    return new Builder<T>();
+                }
+                return new Builder<T>();
+            }
+            else return new Builder<T>();
+        }
+
+
+
+
+
+
 
         //Builder
         //public ISwitchCaseDefault<T> EndWith => new Default<T>(); //new Default<T>(); //explicit operator ?
