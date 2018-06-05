@@ -17,6 +17,10 @@ namespace SwitchCase
                 .DefaultTo.AccomplishDefault(() => WriteLine("Default"), true)
                 .BuildUp();
 
+            /*int _value = default;
+            WriteLine(_value);
+            WriteLine(_value.Equals(default(int)));*/
+
             /*WriteLine(Switch<int>.OfNullable(j).Get());
 
             var _switch = Switch<int>.OfNullable(j);

@@ -25,7 +25,7 @@ namespace SwitchCase
         private T _value;
 
         public Switch() { }
-        public Switch(T arg) => _value = arg;
+        private Switch(T arg) => _value = arg;
                 
         public static Switch<T> Empty => EMPTY;
         public static Switch<T> Of(T arg) => new Switch<T>(arg);
@@ -93,7 +93,7 @@ namespace SwitchCase
         {
             if (!caseValue.Equals(default) && caseValue.Equals(Value))
             {
-                if (enableBreak && IsPresent) //true
+                if (enableBreak) //true
                 {
                     IfPresent(action);
                     return Breaker();                    
@@ -111,7 +111,7 @@ namespace SwitchCase
         {
             if (!caseValue.Equals(default) && caseValue.Equals(Value))
             {
-                if (enableBreak && IsPresent) //true
+                if (enableBreak) //true
                 {
                     IfPresent(action);
                     return new Builder<T>();
