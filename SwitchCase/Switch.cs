@@ -41,25 +41,11 @@ namespace SwitchCase
         private bool IsNull => Value == null;
         private bool IsDefault => Value.Equals(default);
 
-        protected bool IsPresent => IsDefault;
-
-        protected void CaseExecution(Action action)
+        protected void Execution(Action action)
         {
-            if (!IsNull)
+            if (!IsNull || !IsDefault)
                 action?.Invoke();
         }
-
-        protected void DefaultExecution(Action action)
-        {
-            if (IsNull)
-                action?.Invoke();
-        }
-
-        protected void IfPresent(Action<T> action)
-        {
-            if (IsNull)
-                action?.Invoke(Value);
-        }  
         
         public T GetCustomized(Func<T, T> funcCustom) => funcCustom(Value);
         public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom(Value);
@@ -80,42 +66,38 @@ namespace SwitchCase
 
         private Switch<T> Breaker()
         {
-            Console.WriteLine($"It has been broken with the matched value:" +
-                $" {Value}");
             (caseValue, Value) = (default, default);
             return this;
         }
 
-        public Switch<T> Accomplish(Action action, bool enableBreak = const_true)
+        public Switch<T> Accomplish(Action action = default, bool enableBreak = const_true)
         {
             if (caseValue.Equals(Value))
             {
                 if (enableBreak)
                 {
-                    CaseExecution(action);
+                    Execution(action);
                     return Breaker();
                 }
                 else
                 {
-                    CaseExecution(action);
+                    Execution(action);
                     return this;
                 }
             }
             else return this;
         }
 
-        public Builder<T> AccomplishDefault(Action action, bool enableBreak = const_true)
+        public void AccomplishDefault(Action action = default, bool enableBreak = const_true)
         {
             if (!caseValue.Equals(Value))
             {
                 if (enableBreak)
                 {
-                    action?.Invoke();
-                    return new Builder<T>();
-                }
-                return new Builder<T>();
-            }
-            else return new Builder<T>();
-        }        
+                    Execution(action);                    
+                }               
+            }            
+        }
+        //TODO: bool breaker which is third trigger to go
     }
 }

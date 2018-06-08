@@ -13,9 +13,9 @@ namespace SwitchCase
 
             _switch
                 .CaseOf(102).Accomplish(() => WriteLine("Ten"))
-                //.CaseOf(102).Accomplish(() => WriteLine("Two"))
-                .SoftDefaultTo.AccomplishDefault(() => WriteLine("Default"))
-                .BuildUp();
+                .CaseOf(102).Accomplish(() => WriteLine("Two"))
+                .CaseOf(102 - 92).Accomplish()
+                .SoftDefaultTo.AccomplishDefault(() => WriteLine("Default"));
             
             /*int _value = default;
             WriteLine(_value);
