@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using static System.Boolean;
+
 namespace SwitchCase
 {
     /// <summary>
@@ -21,7 +23,11 @@ namespace SwitchCase
     /// </remarks>
     public class Switch<T> : ISwitchCaseDefault<T>
     {
+        private const bool const_true = true;
+        private const bool const_false = false;
+
         private static readonly Switch<T> EMPTY = new Switch<T>(default);
+        
         public T Value { get; set; }
 
         public Switch() { }
@@ -32,26 +38,26 @@ namespace SwitchCase
         public static Switch<T> OfNullable(T arg) => arg != null ? Of(arg) : Empty;
         public static Switch<T> OfNullable(Func<T> outputArg) => outputArg != null ? Of(outputArg()) : Empty;
 
-        private bool IsNotNull => Value != null;
-        private bool IsNotDefault => !Value.Equals(default);
+        private bool IsNull => Value == null;
+        private bool IsDefault => Value.Equals(default);
 
-        protected bool IsPresent => IsNotDefault;
+        protected bool IsPresent => IsDefault;
 
         protected void CaseExecution(Action action)
         {
-            if (IsNotNull)
+            if (!IsNull)
                 action?.Invoke();
         }
 
         protected void DefaultExecution(Action action)
         {
-            if (IsNotNull)
+            if (IsNull)
                 action?.Invoke();
         }
 
         protected void IfPresent(Action<T> action)
         {
-            if (IsNotNull)
+            if (IsNull)
                 action?.Invoke(Value);
         }  
         
@@ -80,7 +86,7 @@ namespace SwitchCase
             return this;
         }
 
-        public Switch<T> Accomplish(Action action, bool enableBreak)
+        public Switch<T> Accomplish(Action action, bool enableBreak = const_true)
         {
             if (caseValue.Equals(Value))
             {
@@ -98,7 +104,7 @@ namespace SwitchCase
             else return this;
         }
 
-        public Builder<T> AccomplishDefault(Action action, bool enableBreak)
+        public Builder<T> AccomplishDefault(Action action, bool enableBreak = const_true)
         {
             if (!caseValue.Equals(Value))
             {
@@ -110,16 +116,6 @@ namespace SwitchCase
                 return new Builder<T>();
             }
             else return new Builder<T>();
-        }
-
-
-
-
-
-
-
-        //Builder
-        //public ISwitchCaseDefault<T> EndWith => new Default<T>(); //new Default<T>(); //explicit operator ?
-
+        }        
     }
 }

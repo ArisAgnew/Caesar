@@ -12,9 +12,9 @@ namespace SwitchCase
             var _switch = Switch<int?>.OfNullable(j);
 
             _switch
-                .CaseOf(102).Accomplish(() => WriteLine("Ten"), false)
-                //.CaseOf(2).Accomplish(() => WriteLine("Two"), false)
-                .SoftDefaultTo.AccomplishDefault(() => WriteLine("Default"), false)
+                .CaseOf(102).Accomplish(() => WriteLine("Ten"))
+                //.CaseOf(102).Accomplish(() => WriteLine("Two"))
+                .SoftDefaultTo.AccomplishDefault(() => WriteLine("Default"))
                 .BuildUp();
             
             /*int _value = default;
