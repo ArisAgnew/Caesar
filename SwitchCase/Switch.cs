@@ -22,44 +22,41 @@ namespace SwitchCase
     public class Switch<T> : ISwitchCaseDefault<T>
     {
         private static readonly Switch<T> EMPTY = new Switch<T>(default);
-        private T _value;
+        public T Value { get; set; }
 
         public Switch() { }
-        private Switch(T arg) => _value = arg;
+        private Switch(T arg) => Value = arg;
                 
         public static Switch<T> Empty => EMPTY;
         public static Switch<T> Of(T arg) => new Switch<T>(arg);
         public static Switch<T> OfNullable(T arg) => arg != null ? Of(arg) : Empty;
         public static Switch<T> OfNullable(Func<T> outputArg) => outputArg != null ? Of(outputArg()) : Empty;
 
-        protected bool IsPresent => _value != null || !_value.Equals(default(T));
+        private bool IsNotNull => Value != null;
+        private bool IsNotDefault => !Value.Equals(default);
 
-        protected void IfPresent(Action action)
+        protected bool IsPresent => IsNotDefault;
+
+        protected void CaseExecution(Action action)
         {
-            if (IsPresent)
+            if (IsNotNull)
+                action?.Invoke();
+        }
+
+        protected void DefaultExecution(Action action)
+        {
+            if (IsNotNull)
                 action?.Invoke();
         }
 
         protected void IfPresent(Action<T> action)
         {
-            if (IsPresent)
-                action?.Invoke(_value);
-        }
-
-        public T Value
-        {
-            get => _value;
-            set => value = _value;
-        }
-
-        public ref T GetByRef()
-        {
-            ref T ref_value = ref _value;
-            return ref ref_value;
-        }        
-
-        public T GetCustomized(Func<T, T> funcCustom) => funcCustom(_value);
-        public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom(_value);
+            if (IsNotNull)
+                action?.Invoke(Value);
+        }  
+        
+        public T GetCustomized(Func<T, T> funcCustom) => funcCustom(Value);
+        public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom(Value);
 
         public Case<T> Case => new Case<T>();
         //public Default<T> Default => new Default<T>();
@@ -72,35 +69,29 @@ namespace SwitchCase
             return this;
         }
 
-        public Switch<T> DefaultTo
-        {
-            get
-            {
-                
-                return new Switch<T>();
-            }
-        }
+        public Switch<T> SoftDefaultTo => this; // it does not nullifies each members in class
+        public Switch<T> HardDefaultTo => new Switch<T>(); // it nullifies each members in class
 
         private Switch<T> Breaker()
         {
             Console.WriteLine($"It has been broken with the matched value:" +
                 $" {Value}");
-            _value = default;
+            (caseValue, Value) = (default, default);
             return this;
         }
 
         public Switch<T> Accomplish(Action action, bool enableBreak)
         {
-            if (!caseValue.Equals(default) && caseValue.Equals(Value))
+            if (caseValue.Equals(Value))
             {
-                if (enableBreak) //true
+                if (enableBreak)
                 {
-                    IfPresent(action);
-                    return Breaker();                    
+                    CaseExecution(action);
+                    return Breaker();
                 }
-                else //false
+                else
                 {
-                    IfPresent(action);
+                    CaseExecution(action);
                     return this;
                 }
             }
@@ -109,11 +100,11 @@ namespace SwitchCase
 
         public Builder<T> AccomplishDefault(Action action, bool enableBreak)
         {
-            if (!caseValue.Equals(default) && caseValue.Equals(Value))
+            if (!caseValue.Equals(Value))
             {
-                if (enableBreak) //true
+                if (enableBreak)
                 {
-                    IfPresent(action);
+                    action?.Invoke();
                     return new Builder<T>();
                 }
                 return new Builder<T>();

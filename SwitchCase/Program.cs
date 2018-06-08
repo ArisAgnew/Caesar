@@ -7,16 +7,16 @@ namespace SwitchCase
     {
         static void Main(string[] args)
         {
-            int j = 10;
+            int? j = 10;
 
-            var _switch = Switch<int>.OfNullable(j);
+            var _switch = Switch<int?>.OfNullable(j);
 
             _switch
-                .CaseOf(10).Accomplish(() => WriteLine("Ten"), true)
+                .CaseOf(102).Accomplish(() => WriteLine("Ten"), false)
                 //.CaseOf(2).Accomplish(() => WriteLine("Two"), false)
-                .DefaultTo.AccomplishDefault(() => WriteLine("Default"), true)
+                .SoftDefaultTo.AccomplishDefault(() => WriteLine("Default"), false)
                 .BuildUp();
-
+            
             /*int _value = default;
             WriteLine(_value);
             WriteLine(_value.Equals(default(int)));*/
