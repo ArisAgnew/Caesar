@@ -29,6 +29,7 @@ namespace SwitchCase
         private static readonly Switch<T> EMPTY = new Switch<T>(default);
         
         public T Value { get; set; }
+        private protected T CaseValue { get; set; } = default;
 
         public Switch() { }
         private Switch(T arg) => Value = arg;
@@ -46,18 +47,23 @@ namespace SwitchCase
             if (!IsNull || !IsDefault)
                 action?.Invoke();
         }
-        
+
+        protected X Execution<X>(Func<X> action) => 
+            !action.Equals(default) 
+                ? default 
+                : (!IsNull || !IsDefault) 
+                    ? action() 
+                    : default;
+
         public T GetCustomized(Func<T, T> funcCustom) => funcCustom(Value);
         public V GetCustomized<V>(Func<T, V> funcCustom) => funcCustom(Value);
 
         public Case<T> Case => new Case<T>();
         //public Default<T> Default => new Default<T>();
 
-        private protected T caseValue = default;
-
         public Switch<T> CaseOf(T t)
         {
-            caseValue = t;
+            CaseValue = t;
             return this;
         }
 
@@ -66,13 +72,13 @@ namespace SwitchCase
 
         private Switch<T> Breaker()
         {
-            (caseValue, Value) = (default, default);
+            (CaseValue, Value) = (default, default);
             return this;
         }
 
         public Switch<T> Accomplish(Action action = default, bool enableBreak = const_true)
         {
-            if (caseValue.Equals(Value))
+            if (CaseValue.Equals(Value))
             {
                 if (enableBreak)
                 {
@@ -90,7 +96,7 @@ namespace SwitchCase
 
         public void AccomplishDefault(Action action = default, bool enableBreak = const_true)
         {
-            if (!caseValue.Equals(Value))
+            if (!CaseValue.Equals(Value))
             {
                 if (enableBreak)
                 {
@@ -98,6 +104,24 @@ namespace SwitchCase
                 }               
             }            
         }
+
+        public X AccomplishDefault<X>(Func<X> action = default, bool enableBreak = const_true) => 
+            CaseValue.Equals(Value) 
+                ? default 
+                : enableBreak 
+                    ? Execution(action) 
+                    : default;
+
+        public virtual void Reset()
+        {
+
+        }
+
+        public virtual V GetAllValues<V>() where V : class
+        {
+            return default;
+        }
+
         //TODO: bool breaker which is third trigger to go
     }
 }
