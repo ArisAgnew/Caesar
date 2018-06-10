@@ -41,6 +41,7 @@ namespace SwitchCase
 
         private bool IsNull => Value == null;
         private bool IsDefault => Value.Equals(default);
+        private bool IsInterrupted => default; 
 
         protected void Execution(Action action)
         {
@@ -121,7 +122,5 @@ namespace SwitchCase
         {
             return default;
         }
-
-        //TODO: bool breaker which is third trigger to go
     }
 }
