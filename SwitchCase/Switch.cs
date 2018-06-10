@@ -64,7 +64,10 @@ namespace SwitchCase
 
         public Switch<T> CaseOf(T t)
         {
-            CaseValue = t;
+            if (t.Equals(default))
+            {
+                CaseValue = t;
+            }
             return this;
         }
 
