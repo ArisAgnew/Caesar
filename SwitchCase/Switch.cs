@@ -33,7 +33,7 @@ namespace SwitchCase
         private const bool const_false = default(bool);
         
         private static readonly Switch<T> EMPTY = new Switch<T>(default);
-        protected dynamic imListOfArgs = ImmutableList.Create<T>().ToImmutableList();
+        protected IImmutableList<T> imListOfArgs = new List<T>().ToImmutableList();
         //public ImmutableList<T> AddRange(IEnumerable<T> items);
         public T Value { get; set; }
         public T CaseValue { get; set; } = default;
