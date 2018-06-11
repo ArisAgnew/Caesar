@@ -9,15 +9,11 @@ namespace SwitchCase
         {
             int? j = 10;
 
-            var _switch = Switch<int?>.OfNullable(j);
-
-            _switch
+            Switch<int?>.OfNullable(j)
                 .CaseOf(102).Accomplish(() => WriteLine("Ten"))
                 .CaseOf(102).Accomplish(() => WriteLine("Two"))
-                .CaseOf(102 - 92).Accomplish(() => WriteLine("Three"))
-                .SoftDefaultTo.AccomplishDefault(() => WriteLine("Default"));
-
-            WriteLine(!default(Boolean));
+                .CaseOf(10).Accomplish(() => WriteLine("Three"))
+                .Default.AccomplishDefault(() => WriteLine("Default"));
             
             /*int _value = default;
             WriteLine(_value);

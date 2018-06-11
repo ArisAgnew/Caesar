@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Text;
 
 using static System.Boolean;
@@ -21,15 +23,20 @@ namespace SwitchCase
     /// 
     /// Starting with C# 7.0, the match expression can be any non-null expression.
     /// </remarks>
-    public class Switch<T> : ISwitchCaseDefault<T>
+    internal sealed class Switch<T> : 
+                                    AbstractSwitch<T>,
+                                    ISwitchCaseDefault<T>,
+                                    ISwitchValue<T>,
+                                    ICaseValue<T>
     {
-        private const bool const_true = true;
-        private const bool const_false = false;
-
-        private static readonly Switch<T> EMPTY = new Switch<T>(default);
+        private const bool const_true = !default(bool);
+        private const bool const_false = default(bool);
         
+        private static readonly Switch<T> EMPTY = new Switch<T>(default);
+        protected dynamic imListOfArgs = ImmutableList.Create<T>().ToImmutableList();
+        //public ImmutableList<T> AddRange(IEnumerable<T> items);
         public T Value { get; set; }
-        private protected T CaseValue { get; set; } = default;
+        public T CaseValue { get; set; } = default;
 
         public Switch() { }
         private Switch(T arg) => Value = arg;
@@ -43,13 +50,13 @@ namespace SwitchCase
         private bool IsDefault => Value.Equals(default);
         private bool IsInterrupted => default; 
 
-        protected void Execution(Action action)
+        protected override void Execution(Action action)
         {
             if (!IsNull || !IsDefault)
                 action?.Invoke();
         }
 
-        protected X Execution<X>(Func<X> action) => 
+        protected override X Execution<X>(Func<X> action) => 
             !action.Equals(default) 
                 ? default 
                 : (!IsNull || !IsDefault) 
@@ -64,19 +71,30 @@ namespace SwitchCase
 
         public Switch<T> CaseOf(T t)
         {
-            if (t.Equals(default))
+            if (!t.Equals(default))
             {
                 CaseValue = t;
             }
             return this;
         }
 
+        public Switch<T> Default
+        {
+            get
+            {
+                // some extra logic to be added later on
+                return this;
+            }
+        }
+
         public Switch<T> SoftDefaultTo => this; // it does not nullifies each members in class
         public Switch<T> HardDefaultTo => new Switch<T>(); // it nullifies each members in class
 
+        private Action ResetAction => () => (Value, CaseValue) = (default, default);
+
         private Switch<T> Breaker()
         {
-            (CaseValue, Value) = (default, default);
+            ResetAction();
             return this;
         }
 
@@ -116,12 +134,9 @@ namespace SwitchCase
                     ? Execution(action) 
                     : default;
 
-        public virtual void Reset()
-        {
+        public Switch<T> Reset() => default; //still in development
 
-        }
-
-        public virtual V GetAllValues<V>() where V : class
+        public V GetAllValues<V>() where V : class
         {
             return default;
         }
