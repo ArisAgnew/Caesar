@@ -37,8 +37,14 @@ namespace SwitchCase
 
         private readonly ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
 
+        private Action ResetAction => () => (Value, CaseValue) = (default, default);
+
         public V Value { get; set; }
         public V CaseValue { get; set; } = default;
+
+        private bool IsNull => Value == null;
+        private bool IsDefault => Value.Equals(default);
+        private bool IsInterrupted => default;
 
         private Switch() { }
         private Switch(V arg) => Value = arg;
@@ -47,11 +53,7 @@ namespace SwitchCase
         public static Switch<V> Of(V arg) => new Switch<V>(arg);
         public static Switch<V> OfNullable(V arg) => arg != null ? Of(arg) : Empty;
         public static Switch<V> OfNullable(Func<V> outputArg) => outputArg != null ? Of(outputArg()) : Empty;
-
-        private bool IsNull => Value == null;
-        private bool IsDefault => Value.Equals(default);
-        private bool IsInterrupted => default; 
-
+        
         protected override void Execution(Action action)
         {
             if (!IsNull || !IsDefault)
@@ -86,8 +88,6 @@ namespace SwitchCase
                 return this;
             }
         }
-
-        private Action ResetAction => () => (Value, CaseValue) = (default, default);
 
         private Switch<V> Breaker()
         {

@@ -8,7 +8,7 @@ namespace SwitchCase
     {
         V CaseValue { get; set; }
         ICase<V> CaseOf(V t);
-        ICase<V> Accomplish(Action action = default, bool enableBreak = true);
+        ICase<V> Accomplish(Action action = default, bool enableBreak = !default(bool));
         IDefault<V> ChangeOverToDefault { get; }
     }
 }

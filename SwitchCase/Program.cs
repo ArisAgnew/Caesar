@@ -3,6 +3,8 @@ using static System.Console;
 
 namespace SwitchCase
 {
+    public enum Color { Red, Green, Blue }
+
     class Program
     {
         static void Main(string[] args)

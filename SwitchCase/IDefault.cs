@@ -6,6 +6,6 @@ namespace SwitchCase
 {
     public interface IDefault<V>
     {
-        IDefault<V> Accomplish(Action action = default, bool enableBreak = true);
+        IDefault<V> Accomplish(Action action = default, bool enableBreak = !default(bool));
     }
 }
