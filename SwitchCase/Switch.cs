@@ -33,7 +33,7 @@ namespace SwitchCase
         private const bool const_false = default(bool);
         
         private static readonly Switch<T> EMPTY = new Switch<T>(default);
-        protected IImmutableList<T> imListOfArgs = new List<T>().ToImmutableList();
+        protected ImmutableList<T>.Builder argsBuilder = ImmutableList.CreateBuilder<T>();
         //public ImmutableList<T> AddRange(IEnumerable<T> items);
         public T Value { get; set; }
         public T CaseValue { get; set; } = default;
@@ -74,6 +74,7 @@ namespace SwitchCase
             if (!t.Equals(default))
             {
                 CaseValue = t;
+                argsBuilder.Add(t);
             }
             return this;
         }
@@ -127,6 +128,18 @@ namespace SwitchCase
             }            
         }
 
+        public Switch<T> AccomplishDefaultThen(Action action = default, bool enableBreak = const_true)
+        {
+            if (!CaseValue.Equals(Value))
+            {
+                if (enableBreak)
+                {
+                    Execution(action);
+                }
+            }
+            return this;
+        }
+
         public X AccomplishDefault<X>(Func<X> action = default, bool enableBreak = const_true) => 
             CaseValue.Equals(Value) 
                 ? default 
@@ -135,6 +148,15 @@ namespace SwitchCase
                     : default;
 
         public Switch<T> Reset() => default; //still in development
+
+        public Switch<T> BuildUp()
+        {
+            ImmutableList<T> imListOfArgs = argsBuilder.ToImmutable();
+            imListOfArgs.ForEach(delegate(T element) {
+                Console.WriteLine(element);
+            });
+            return this;
+        }
 
         public V GetAllValues<V>() where V : class
         {
