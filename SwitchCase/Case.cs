@@ -22,7 +22,7 @@ namespace SwitchCase
 
         public virtual Case<T> When() => this;
 
-        /*public Switch<T> Accomplish(Action action, bool enableBreak)
+        /*public Switch<V> Accomplish(Action action, bool enableBreak)
         {
             
             if (!caseValue.Equals(default) & caseValue.Equals(switchValue))
@@ -30,17 +30,17 @@ namespace SwitchCase
                 if (enableBreak) //true
                 {
                     action?.Invoke();
-                    return new Breaker<T>();
+                    return new Breaker<V>();
                 }
                 else //false
                 {
                     action?.Invoke();
                 }
             }
-            else return new Switch<T>();           
+            else return new Switch<V>();           
         }*/
 
-        //public Switch<T> Accomplish(Func<T> func, bool enableBreak) => default;
-        //public Switch<T> Accomplish(Func<T, T> func, bool enableBreak) => default;
+        //public Switch<V> Accomplish(Func<V> func, bool enableBreak) => default;
+        //public Switch<V> Accomplish(Func<V, V> func, bool enableBreak) => default;
     }
 }
