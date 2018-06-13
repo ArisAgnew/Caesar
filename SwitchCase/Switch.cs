@@ -26,20 +26,21 @@ namespace SwitchCase
     /// </remarks>
     internal sealed class Switch<V> : 
                                     AbstractSwitch<V>,
-                                    ISwitchCaseDefault<V>,
-                                    ISwitchValue<V>,
-                                    ICaseValue<V>
+                                    ISwitch<V>,
+                                    ICase<V>,
+                                    IDefault<V>
     {
         private const bool const_true = !default(bool);
         private const bool const_false = default(bool);
         
         private static readonly Switch<V> EMPTY = new Switch<V>(default);
-        private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
+
+        private readonly ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
 
         public V Value { get; set; }
         public V CaseValue { get; set; } = default;
 
-        public Switch() { }
+        private Switch() { }
         private Switch(V arg) => Value = arg;
                 
         public static Switch<V> Empty => EMPTY;
@@ -67,10 +68,7 @@ namespace SwitchCase
         public V GetCustomized(Func<V, V> funcCustom) => funcCustom(Value);
         public U GetCustomized<U>(Func<V, U> funcCustom) => funcCustom(Value);
 
-        public Case<V> Case => new Case<V>();
-        //public Default<V> Default => new Default<V>();
-
-        public Switch<V> CaseOf(V t)
+        public ICase<V> CaseOf(V t)
         {
             if (!t.Equals(default))
             {
@@ -80,7 +78,7 @@ namespace SwitchCase
             return this;
         }
 
-        public Switch<V> Default
+        public IDefault<V> ChangeOverToDefault
         {
             get
             {
@@ -88,9 +86,6 @@ namespace SwitchCase
                 return this;
             }
         }
-
-        public Switch<V> SoftDefaultTo => this; // it does not nullifies each members in class
-        public Switch<V> HardDefaultTo => new Switch<V>(); // it nullifies each members in class
 
         private Action ResetAction => () => (Value, CaseValue) = (default, default);
 
@@ -100,7 +95,7 @@ namespace SwitchCase
             return this;
         }
 
-        public Switch<V> Accomplish(Action action = default, bool enableBreak = const_true)
+        public ICase<V> Accomplish(Action action, bool enableBreak)
         {
             if (CaseValue.Equals(Value))
             {
@@ -129,7 +124,7 @@ namespace SwitchCase
             }            
         }
 
-        public Switch<V> CarryOutTo(Action action = default, bool enableBreak = const_true)
+        IDefault<V> IDefault<V>.Accomplish(Action action, bool enableBreak)
         {
             CarryOut(action, enableBreak);
             return this;
@@ -143,24 +138,15 @@ namespace SwitchCase
                     : default;
 
         public Switch<V> Reset() => default; //still in development
-
-        public Switch<V> BuildUp()
-        {
-            ImmutableList<V> imListOfArgs = argsBuilder?.ToImmutable();
-            imListOfArgs.ForEach(delegate(V element) {
-                Console.WriteLine(element);
-            });
-            return this;
-        }
+               
+        public ImmutableHashSet<V> GetCaseValuesAsImmutableSet() => argsBuilder.ToImmutableHashSet() ?? default;
+        public ImmutableList<V> GetCaseValuesAsImmutableList() => argsBuilder.ToImmutable() ?? default;
+        public ImmutableSortedSet<V> GetCaseValuesAsImmutableSortedSet() => argsBuilder.ToImmutableSortedSet() ?? default;
         
-        public ImmutableHashSet<V>   GetImmutableSet()       => argsBuilder.ToImmutableHashSet()   ?? default;
-        public ImmutableList<V>      GetImmutableList()      => argsBuilder.ToImmutable()          ?? default;
-        public ImmutableSortedSet<V> GetImmutableSortedSet() => argsBuilder.ToImmutableSortedSet() ?? default;
-        
-        public void GetValuesAsTuple() // implement properly 06/13/2018
+        public void GetValuesAsTuple() // implement it properly 06/13/2018
         {
-            GetImmutableList().ForEach(v => Console.WriteLine(v));
-            var V = GetImmutableList()
+            GetCaseValuesAsImmutableList().ForEach(v => Console.WriteLine(v));
+            var V = GetCaseValuesAsImmutableList()
                 .Select(eachValue => Tuple.Create(eachValue)).ToList();
 
             V.ForEach(v => Console.WriteLine(v));

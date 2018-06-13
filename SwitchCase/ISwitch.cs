@@ -4,8 +4,8 @@ using System.Text;
 
 namespace SwitchCase
 {
-    public interface ISwitchValue<T>
+    public interface ISwitch<V>
     {
-        T Value { get; set; }
+        V Value { get; set; }
     }
 }

@@ -18,15 +18,16 @@ namespace SwitchCase
                 .CaseOf(1340).Accomplish(() => WriteLine("Four"))
                 .CaseOf(153).Accomplish(() => WriteLine("Five"))
                 .CaseOf(18765).Accomplish(() => WriteLine("Six"))
-                .CaseOf(10).Accomplish(() => WriteLine("Seven"))
+                .CaseOf(102).Accomplish(() => WriteLine("Seven"))
                 .CaseOf(192).Accomplish(() => WriteLine("Eight"))
                 .CaseOf(210).Accomplish(() => WriteLine("Nine"))
                 .CaseOf(4510).Accomplish(() => WriteLine("Ten"))
-                .CaseOf(3510).Accomplish(() => WriteLine("Eleven"))
-                .CaseOf(6210).Accomplish(() => WriteLine("Twelve"))
-                .Default.CarryOutTo(() => WriteLine("Default"));
+                .CaseOf(103).Accomplish(() => WriteLine("Eleven"))
+                .CaseOf(10).Accomplish(() => WriteLine("Twelve"))
+                .CaseOf(1033).Accomplish()
+                .ChangeOverToDefault.Accomplish(() => WriteLine("Default"));
 
-            _switch.GetAllValuesAsTuple();
+            _switch.GetValuesAsTuple();
 
             /*int _value = default;
             WriteLine(_value);

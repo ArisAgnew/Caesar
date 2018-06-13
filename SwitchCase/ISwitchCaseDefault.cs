@@ -4,7 +4,8 @@ using System.Text;
 
 namespace SwitchCase
 {
-    public interface ISwitchCaseDefault<T>
+    public interface ISwitchCaseDefault<V>
     {
+        
     }
 }
