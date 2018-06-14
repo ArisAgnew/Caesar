@@ -6,6 +6,7 @@ namespace SwitchCase
 {
     internal abstract class AbstractSwitch<T>
     {
+        protected abstract void Breaker();
         protected abstract void Execution(Action action);
         protected abstract X Execution<X>(Func<X> action);
     }

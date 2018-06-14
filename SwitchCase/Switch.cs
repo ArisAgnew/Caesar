@@ -42,7 +42,9 @@ namespace SwitchCase
         public static Switch<V> Of(V arg) => new Switch<V>(arg);
         public static Switch<V> OfNullable(V arg) => arg != null ? Of(arg) : Empty;
         public static Switch<V> OfNullable(Func<V> outputArg) => outputArg != null ? Of(outputArg()) : Empty;
-        
+
+        protected override void Breaker() => ResetAction();
+
         protected override void Execution(Action action)
         {
             if (!IsNull || !IsDefault)
@@ -76,13 +78,7 @@ namespace SwitchCase
                 // some extra logic to be added later on
                 return this;
             }
-        }
-
-        private Switch<V> Breaker()
-        {
-            ResetAction();
-            return this;
-        }
+        }       
 
         public ICase<V> Accomplish(Action action, bool enableBreak)
         {
@@ -91,7 +87,8 @@ namespace SwitchCase
                 if (enableBreak)
                 {
                     Execution(action);
-                    return Breaker();
+                    Breaker();
+                    return this;
                 }
                 else
                 {
@@ -102,20 +99,15 @@ namespace SwitchCase
             else return this;
         }
 
-        public void CarryOut(Action action = default, bool enableBreak = const_true)
+        IDefault<V> IDefault<V>.Accomplish(Action action, bool enableBreak)
         {
             if (!CaseValue.Equals(Value))
             {
                 if (enableBreak)
                 {
-                    Execution(action);                    
-                }               
-            }            
-        }
-
-        IDefault<V> IDefault<V>.Accomplish(Action action, bool enableBreak)
-        {
-            CarryOut(action, enableBreak);
+                    Execution(action);
+                }
+            }
             return this;
         }
 
