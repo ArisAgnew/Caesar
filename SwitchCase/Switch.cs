@@ -24,9 +24,11 @@ namespace SwitchCase
         
         private static readonly Switch<V> EMPTY = new Switch<V>(default);
 
-        private readonly ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
+        private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
 
-        private Action ResetAction => () => (Value, CaseValue) = (default, default);
+        private Action ResetValue => () => Value = default;
+        private Action ResetCaseValue => () => CaseValue = default;
+        private Action ResetArgumentList => () => argsBuilder.Clear();
 
         public V Value { get; set; }
         public V CaseValue { get; set; } = default;
@@ -43,7 +45,11 @@ namespace SwitchCase
         public static Switch<V> OfNullable(V arg) => arg != null ? Of(arg) : Empty;
         public static Switch<V> OfNullable(Func<V> outputArg) => outputArg != null ? Of(outputArg()) : Empty;
 
-        protected override void Breaker() => ResetAction();
+        protected override void Breaker()
+        {
+            ResetValue();
+            ResetCaseValue();
+        }
 
         protected override void Execution(Action action)
         {
@@ -118,7 +124,18 @@ namespace SwitchCase
                     ? Execution(action) 
                     : default;
 
-        public Switch<V> Reset() => default; //still in development
+        public Switch<V> FullEntitiesReset()
+        {
+            if (!IsNull && !IsDefault)
+            {
+                Breaker();
+            }
+            if (argsBuilder.Count > 0)
+            {
+                ResetArgumentList();
+            }
+            return this;
+        }
                
         public ImmutableHashSet<V> GetCaseValuesAsImmutableSet() => argsBuilder.ToImmutableHashSet() ?? default;
         public ImmutableList<V> GetCaseValuesAsImmutableList() => argsBuilder.ToImmutable() ?? default;
