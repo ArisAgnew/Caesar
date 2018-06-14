@@ -1,34 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-
-using static System.Boolean;
 
 namespace SwitchCase
 {
     /// <summary>
-    /// 
+    /// Switch class is a functional wrapper of regular switch operator
+    /// with other-following operators such as 'case', 'when', 'default';
     /// </summary>
     /// <typeparam name="T"></typeparam> 
     /// <remarks>
-    /// 
-    /// In C# 6, the match expression must be an expression that returns a value of the following types:
-    /// a char.
-    /// a string.
-    /// a bool.
-    /// an integral value, such as an int or a long.
-    /// an enum value.
-    /// 
     /// Starting with C# 7.0, the match expression can be any non-null expression.
     /// </remarks>
     internal sealed class Switch<V> : 
                                     AbstractSwitch<V>,
                                     ISwitch<V>,
                                     ICase<V>,
-                                    IDefault<V>
+                                    IDefault<V>        
     {
         private const bool const_true = !default(bool);
         private const bool const_false = default(bool);

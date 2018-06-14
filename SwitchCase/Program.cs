@@ -3,15 +3,15 @@ using static System.Console;
 
 namespace SwitchCase
 {
-    public enum Color { Red, Green, Blue }
+    public enum Colour { Red, Green, Blue }
 
     class Program
     {
         static void Main(string[] args)
         {
-            int? j = 10;
+            ushort? j = 10;
 
-            var _switch = Switch<int?>.OfNullable(j);
+            var _switch = Switch<ushort?>.OfNullable(j);
 
             _switch
                 .CaseOf(102).Accomplish(() => WriteLine("Ten"))
@@ -25,23 +25,22 @@ namespace SwitchCase
                 .CaseOf(210).Accomplish(() => WriteLine("Nine"))
                 .CaseOf(4510).Accomplish(() => WriteLine("Ten"))
                 .CaseOf(103).Accomplish(() => WriteLine("Eleven"))
-                .CaseOf(10).Accomplish(() => WriteLine("Twelve"))
+                .CaseOf(101).Accomplish(() => WriteLine("Twelve"))
                 .CaseOf(1033).Accomplish()
                 .ChangeOverToDefault.Accomplish(() => WriteLine("Default"));
 
-            _switch.GetValuesAsTuple();
+            //_switch.GetValuesAsTuple();
 
-            /*int _value = default;
-            WriteLine(_value);
-            WriteLine(_value.Equals(default(int)));*/
+            Colour? colour = Colour.Blue;
+            var colorSwitch = Switch<Colour?>.OfNullable(colour);
 
-            /*WriteLine(Switch<int>.OfNullable(j).Get());
-
-            var _switch = Switch<int>.OfNullable(j);
-            WriteLine(_switch.Get());
-            WriteLine(new Switch<int>().Get());*/
+            colorSwitch
+                .CaseOf(Colour.Blue).Accomplish(() => WriteLine(nameof(Colour.Blue)))
+                .CaseOf(Colour.Green).Accomplish(() => WriteLine(nameof(Colour.Green)))
+                .CaseOf(Colour.Red).Accomplish(() => WriteLine(nameof(Colour.Red)))
+                .ChangeOverToDefault.Accomplish(() => WriteLine("Neither of them"));
 
             ReadKey();
-        }
+        }        
     }
 }
