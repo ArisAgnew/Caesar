@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SwitchCase
 {
-    internal abstract class AbstractSwitch<T>
+    internal abstract class AbstractSwitch<V>
     {
         protected abstract void Breaker();
         protected abstract void Execution(Action action);

@@ -39,6 +39,15 @@ namespace SwitchCase
                 .CaseOf(Colour.Red).Accomplish(() => WriteLine(nameof(Colour.Red)))
                 .ChangeOverToDefault.Accomplish(() => WriteLine("Neither of them"));
 
+            String str = ""; //resolve an issue of reading the object reference types 06/15/2018
+
+            Switch<string>.OfNullable(str)
+                .CaseOf("I Am").Accomplish(() => WriteLine("=> I Am"))
+                .CaseOf("the way").Accomplish(() => WriteLine("=> the way"))
+                .CaseOf("You wish").Accomplish(() => WriteLine("=> You wish"))
+                //.CaseOf("").Accomplish(() => WriteLine("=> Empty"))
+                .ChangeOverToDefault.Accomplish(() => WriteLine("Default str"));
+
             ReadKey();
         }        
     }

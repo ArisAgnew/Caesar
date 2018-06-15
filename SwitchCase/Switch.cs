@@ -13,15 +13,15 @@ namespace SwitchCase
     /// <remarks>
     /// Starting with C# 7.0, the match expression can be any non-null expression.
     /// </remarks>
-    internal sealed class Switch<V> : 
+    internal sealed class Switch<V> :
                                     AbstractSwitch<V>,
                                     ISwitch<V>,
                                     ICase<V>,
-                                    IDefault<V>        
+                                    IDefault<V>
     {
         private const bool const_true = !default(bool);
         private const bool const_false = default(bool);
-        
+
         private static readonly Switch<V> EMPTY = new Switch<V>(default);
 
         private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
@@ -30,7 +30,7 @@ namespace SwitchCase
         private Action ResetCaseValue => () => CaseValue = default;
         private Action ResetArgumentList => () => argsBuilder.Clear();
 
-        public V Value { get; set; }
+        public V Value { get; set; } = default;
         public V CaseValue { get; set; } = default;
 
         private bool IsNull => Value == null;
@@ -39,7 +39,7 @@ namespace SwitchCase
 
         private Switch() { }
         private Switch(V arg) => Value = arg;
-                
+
         public static Switch<V> Empty => EMPTY;
         public static Switch<V> Of(V arg) => new Switch<V>(arg);
         public static Switch<V> OfNullable(V arg) => arg != null ? Of(arg) : Empty;
@@ -57,15 +57,12 @@ namespace SwitchCase
                 action?.Invoke();
         }
 
-        protected override X Execution<X>(Func<X> action) => 
-            !action.Equals(default) 
-                ? default 
-                : (!IsNull || !IsDefault) 
-                    ? action() 
+        protected override X Execution<X>(Func<X> action) =>
+            !action.Equals(default)
+                ? default
+                : (!IsNull || !IsDefault)
+                    ? action()
                     : default;
-
-        public V GetCustomized(Func<V, V> funcCustom) => funcCustom(Value);
-        public U GetCustomized<U>(Func<V, U> funcCustom) => funcCustom(Value);
 
         public ICase<V> CaseOf(V t)
         {
@@ -84,7 +81,7 @@ namespace SwitchCase
                 // some extra logic to be added later on
                 return this;
             }
-        }       
+        }
 
         public ICase<V> Accomplish(Action action, bool enableBreak)
         {
@@ -117,11 +114,11 @@ namespace SwitchCase
             return this;
         }
 
-        public X AccomplishDefault<X>(Func<X> action = default, bool enableBreak = const_true) => 
-            CaseValue.Equals(Value) 
-                ? default 
-                : enableBreak 
-                    ? Execution(action) 
+        public X AccomplishDefault<X>(Func<X> action = default, bool enableBreak = const_true) =>
+            CaseValue.Equals(Value)
+                ? default
+                : enableBreak
+                    ? Execution(action)
                     : default;
 
         public Switch<V> FullEntitiesReset()
@@ -136,7 +133,19 @@ namespace SwitchCase
             }
             return this;
         }
-               
+
+        public ISwitch<V> Peek(Action<V> action)
+        {
+            if (!IsNull || !IsDefault)
+            {
+                action?.Invoke(Value);
+            }
+            return this;
+        }
+
+        public V GetCustomized(Func<V, V> funcCustom) => !IsNull || !IsDefault ? funcCustom(Value) : default;
+        public U GetCustomized<U>(Func<V, U> funcCustom) => !IsNull || !IsDefault ? funcCustom(Value) : default;
+
         public ImmutableHashSet<V> GetCaseValuesAsImmutableSet() => argsBuilder.ToImmutableHashSet() ?? default;
         public ImmutableList<V> GetCaseValuesAsImmutableList() => argsBuilder.ToImmutable() ?? default;
         public ImmutableSortedSet<V> GetCaseValuesAsImmutableSortedSet() => argsBuilder.ToImmutableSortedSet() ?? default;
