@@ -45,7 +45,7 @@ namespace SwitchCase
                 .CaseOf("I Am").Accomplish(() => WriteLine("=> I Am"))
                 .CaseOf("the way").Accomplish(() => WriteLine("=> the way"))
                 .CaseOf("You wish").Accomplish(() => WriteLine("=> You wish"))
-                //.CaseOf("").Accomplish(() => WriteLine("=> Empty"))
+                .CaseOf("").Accomplish(() => WriteLine("=> Empty"))
                 .ChangeOverToDefault.Accomplish(() => WriteLine("Default str"));
 
             ReadKey();

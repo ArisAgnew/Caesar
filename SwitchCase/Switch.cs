@@ -22,8 +22,6 @@ namespace SwitchCase
         private const bool const_true = !default(bool);
         private const bool const_false = default(bool);
 
-        private static readonly Switch<V> EMPTY = new Switch<V>(default);
-
         private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
 
         private Action ResetValue => () => Value = default;
@@ -33,14 +31,15 @@ namespace SwitchCase
         public V Value { get; set; } = default;
         public V CaseValue { get; set; } = default;
 
-        private bool IsNull => Value == null;
+        private bool IsNull => Value == null; // Check out for reference types as well as value types 06.18.2018
         private bool IsDefault => Value.Equals(default);
         private bool IsInterrupted => default;
 
         private Switch() { }
         private Switch(V arg) => Value = arg;
 
-        public static Switch<V> Empty => EMPTY;
+        public static Switch<V> Empty { get; } = new Switch<V>(default);
+
         public static Switch<V> Of(V arg) => new Switch<V>(arg);
         public static Switch<V> OfNullable(V arg) => arg != null ? Of(arg) : Empty;
         public static Switch<V> OfNullable(Func<V> outputArg) => outputArg != null ? Of(outputArg()) : Empty;
@@ -104,12 +103,19 @@ namespace SwitchCase
 
         IDefault<V> IDefault<V>.Accomplish(Action action, bool enableBreak)
         {
-            if (!CaseValue.Equals(Value))
+            try
             {
-                if (enableBreak)
+                if (!CaseValue.Equals(Value))
                 {
-                    Execution(action);
+                    if (enableBreak)
+                    {
+                        Execution(action);
+                    }
                 }
+            }
+            catch
+            {
+                return this;
             }
             return this;
         }
