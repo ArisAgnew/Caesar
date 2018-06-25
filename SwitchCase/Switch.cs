@@ -23,6 +23,7 @@ namespace SwitchCase
         private const bool const_false = default(bool);
 
         private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
+        private Type genericType = typeof(Switch<>).GetGenericArguments().FirstOrDefault();
 
         private Action ResetValue => () => Value = default;
         private Action ResetCaseValue => () => CaseValue = default;
@@ -31,9 +32,12 @@ namespace SwitchCase
         public V Value { get; set; } = default;
         public V CaseValue { get; set; } = default;
 
-        private bool IsNull => Value == null; // Check out for reference types as well as value types 06.18.2018
+        private bool IsNull => Value == null;
         private bool IsDefault => Value.Equals(default);
         private bool IsInterrupted => default;
+
+        private bool IsValueType => genericType.IsValueType;
+        private bool IsReferenceType => !genericType.IsValueType;
 
         private Switch() { }
         private Switch(V arg) => Value = arg;
@@ -63,12 +67,12 @@ namespace SwitchCase
                     ? action()
                     : default;
 
-        public ICase<V> CaseOf(V t)
+        public ICase<V> CaseOf(V v)
         {
-            if (!t.Equals(default))
+            if (!v.Equals(default))
             {
-                CaseValue = t;
-                argsBuilder.Add(t);
+                CaseValue = v;
+                argsBuilder.Add(v);
             }
             return this;
         }
@@ -103,8 +107,23 @@ namespace SwitchCase
 
         IDefault<V> IDefault<V>.Accomplish(Action action, bool enableBreak)
         {
-            try
+            /*try
             {
+                if (typeof(V).IsValueType)
+                {
+                    //todo
+                }
+
+                if (default(V) == null)
+                {
+                    //todo
+                }
+
+                if (CaseValue.GetType().IsValueType && Value.GetType().IsValueType)
+                {
+                    //todo
+                }
+
                 if (!CaseValue.Equals(Value))
                 {
                     if (enableBreak)
@@ -116,6 +135,29 @@ namespace SwitchCase
             catch
             {
                 return this;
+            }
+            return this;*/
+
+            if (IsValueType)
+            {
+                if (!CaseValue.Equals(Value))
+                {
+                    if (enableBreak)
+                    {
+                        Execution(action);
+                    }
+                }
+            }
+
+            if (IsReferenceType)
+            {
+                if (!CaseValue.Equals(Value))
+                {
+                    if (enableBreak)
+                    {
+                        Execution(action);
+                    }
+                }
             }
             return this;
         }
