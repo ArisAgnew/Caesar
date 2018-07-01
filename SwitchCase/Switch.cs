@@ -25,22 +25,22 @@ namespace SwitchCase
         private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
         private Type genericType = typeof(Switch<>).GetGenericArguments().FirstOrDefault();
 
-        private Action ResetValue => () => Value = default;
+        private Action ResetValue => () => SwitchValue = default;
         private Action ResetCaseValue => () => CaseValue = default;
         private Action ResetArgumentList => () => argsBuilder.Clear();
 
-        public V Value { get; set; } = default;
+        public V SwitchValue { get; set; } = default;
         public V CaseValue { get; set; } = default;
 
-        private bool IsNull => Value == null;
-        private bool IsDefault => Value.Equals(default);
+        private bool IsNull => SwitchValue == null;
+        private bool IsDefault => SwitchValue.Equals(default);
         private bool IsInterrupted => default;
 
         private bool IsValueType => genericType.IsValueType;
         private bool IsReferenceType => !genericType.IsValueType;
 
         private Switch() { }
-        private Switch(V arg) => Value = arg;
+        private Switch(V arg) => SwitchValue = arg;
 
         public static Switch<V> Empty { get; } = new Switch<V>(default);
 
@@ -88,7 +88,7 @@ namespace SwitchCase
 
         public ICase<V> Accomplish(Action action, bool enableBreak)
         {
-            if (CaseValue.Equals(Value))
+            if (CaseValue.Equals(SwitchValue))
             {
                 if (enableBreak)
                 {
@@ -107,9 +107,9 @@ namespace SwitchCase
 
         IDefault<V> IDefault<V>.Accomplish(Action action, bool enableBreak)
         {
-            /*try
+            try
             {
-                if (typeof(V).IsValueType)
+                /*if (typeof(V).IsValueType)
                 {
                     //todo
                 }
@@ -119,12 +119,12 @@ namespace SwitchCase
                     //todo
                 }
 
-                if (CaseValue.GetType().IsValueType && Value.GetType().IsValueType)
+                if (CaseValue.GetType().IsValueType && SwitchValue.GetType().IsValueType)
                 {
                     //todo
-                }
+                }*/
 
-                if (!CaseValue.Equals(Value))
+                if (!CaseValue.Equals(SwitchValue))
                 {
                     if (enableBreak)
                     {
@@ -136,34 +136,11 @@ namespace SwitchCase
             {
                 return this;
             }
-            return this;*/
-
-            if (IsValueType)
-            {
-                if (!CaseValue.Equals(Value))
-                {
-                    if (enableBreak)
-                    {
-                        Execution(action);
-                    }
-                }
-            }
-
-            if (IsReferenceType)
-            {
-                if (!CaseValue.Equals(Value))
-                {
-                    if (enableBreak)
-                    {
-                        Execution(action);
-                    }
-                }
-            }
             return this;
         }
 
         public X AccomplishDefault<X>(Func<X> action = default, bool enableBreak = const_true) =>
-            CaseValue.Equals(Value)
+            CaseValue.Equals(SwitchValue)
                 ? default
                 : enableBreak
                     ? Execution(action)
@@ -186,13 +163,15 @@ namespace SwitchCase
         {
             if (!IsNull || !IsDefault)
             {
-                action?.Invoke(Value);
+                action?.Invoke(SwitchValue);
             }
             return this;
         }
 
-        public V GetCustomized(Func<V, V> funcCustom) => !IsNull || !IsDefault ? funcCustom(Value) : default;
-        public U GetCustomized<U>(Func<V, U> funcCustom) => !IsNull || !IsDefault ? funcCustom(Value) : default;
+        public V GetValue() => SwitchValue;
+        public V GetCaseValue() => CaseValue;
+        public V GetCustomized(Func<V, V> funcCustom) => !IsNull || !IsDefault ? funcCustom(SwitchValue) : default;
+        public U GetCustomized<U>(Func<V, U> funcCustom) => !IsNull || !IsDefault ? funcCustom(SwitchValue) : default;
 
         public ImmutableHashSet<V> GetCaseValuesAsImmutableSet() => argsBuilder.ToImmutableHashSet() ?? default;
         public ImmutableList<V> GetCaseValuesAsImmutableList() => argsBuilder.ToImmutable() ?? default;
@@ -211,5 +190,8 @@ namespace SwitchCase
 
             Console.WriteLine(result.Item1);
         }
+
+        public static implicit operator Switch<V>(V value) => OfNullable(value);
+        public static implicit operator V(Switch<V> @switch) => @switch.GetValue();
     }
 }

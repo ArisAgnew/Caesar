@@ -52,7 +52,7 @@ namespace Caesar.AlternativeStuff
         #endregion
 
         public static explicit operator T(Optional<T> optional) => optional.RequireNonNull().Get();
-        public static implicit operator Optional<T>(T optional) => OfNullable(optional);
+        public static implicit operator Optional<T>(T type) => OfNullable(type);
 
         public override bool Equals(object obj)
         {
