@@ -29,8 +29,6 @@ namespace SwitchCase
                 .CaseOf(1033).Accomplish()
                 .ChangeOverToDefault.Accomplish(() => WriteLine("Default"));
 
-            //_switch.GetValuesAsTuple();
-
             Colour? colour = Colour.Blue;
 
             Switch<Colour?>.OfNullable(colour)
@@ -47,6 +45,9 @@ namespace SwitchCase
                 .CaseOf("You wish").Accomplish(() => WriteLine("=> You wish"))
                 .CaseOf("").Accomplish(() => WriteLine("=> Empty"))
                 .ChangeOverToDefault.Accomplish(() => WriteLine("Default str"));
+
+            Switch<ushort?> w = j; //implicit operator Switch<V>(V value)
+            int? val = Switch<int?>.OfNullable(100); //implicit operator V(Switch<V> @switch)
 
             ReadKey();
         }        
