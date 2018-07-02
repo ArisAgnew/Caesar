@@ -56,8 +56,13 @@ namespace SwitchCase
 
         private protected sealed override void Execution(Action action)
         {
+            ExecutionByCaseValue(v => action?.Invoke());
+        }
+
+        private void ExecutionByCaseValue(Action<V> actionByCaseValue)
+        {
             if (!IsNull || !IsDefault)
-                action?.Invoke();
+                actionByCaseValue?.Invoke(CaseValue);
         }
 
         private protected sealed override X Execution<X>(Func<X> action) =>
@@ -105,30 +110,53 @@ namespace SwitchCase
             else return this;
         }
 
+        public ICase<V> Accomplish(Action<V> action, bool enableBreak)
+        {
+            if (CaseValue.Equals(SwitchValue))
+            {
+                if (enableBreak)
+                {
+                    ExecutionByCaseValue(action);
+                    Breaker();
+                    return this;
+                }
+                else
+                {
+                    ExecutionByCaseValue(action);
+                    return this;
+                }
+            }
+            else return this;
+        }
+
         IDefault<V> IDefault<V>.Accomplish(Action action, bool enableBreak)
         {
             try
             {
-                /*if (typeof(V).IsValueType)
-                {
-                    //todo
-                }
-
-                if (default(V) == null)
-                {
-                    //todo
-                }
-
-                if (CaseValue.GetType().IsValueType && SwitchValue.GetType().IsValueType)
-                {
-                    //todo
-                }*/
-
                 if (!CaseValue.Equals(SwitchValue))
                 {
                     if (enableBreak)
                     {
                         Execution(action);
+                    }
+                }
+            }
+            catch
+            {
+                return this;
+            }
+            return this;
+        }
+
+        IDefault<V> IDefault<V>.Accomplish(Action<V> action, bool enableBreak)
+        {
+            try
+            {
+                if (!CaseValue.Equals(SwitchValue))
+                {
+                    if (enableBreak)
+                    {
+                        ExecutionByCaseValue(action);
                     }
                 }
             }
@@ -168,7 +196,7 @@ namespace SwitchCase
             return this;
         }
 
-        public V GetValue() => SwitchValue;
+        public V GetSwitchValue() => SwitchValue;
         public V GetCaseValue() => CaseValue;
         public V GetCustomized(Func<V, V> funcCustom) => !IsNull || !IsDefault ? funcCustom(SwitchValue) : default;
         public U GetCustomized<U>(Func<V, U> funcCustom) => !IsNull || !IsDefault ? funcCustom(SwitchValue) : default;
@@ -192,6 +220,5 @@ namespace SwitchCase
         }
 
         public static implicit operator Switch<V>(V value) => OfNullable(value);
-        public static implicit operator V(Switch<V> @switch) => @switch.GetValue();
     }
 }

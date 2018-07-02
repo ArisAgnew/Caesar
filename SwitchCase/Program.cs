@@ -9,7 +9,7 @@ namespace SwitchCase
     {
         static void Main(string[] args)
         {
-            ushort? j = 10;
+            /*ushort? j = 10;
 
             var _switch = Switch<ushort?>.OfNullable(j);
 
@@ -46,8 +46,13 @@ namespace SwitchCase
                 .CaseOf("").Accomplish(() => WriteLine("=> Empty"))
                 .ChangeOverToDefault.Accomplish(() => WriteLine("Default str"));
 
-            Switch<ushort?> w = j; //implicit operator Switch<V>(V value)
-            int? val = Switch<int?>.OfNullable(100); //implicit operator V(Switch<V> @switch)
+            Switch<ushort?> w = j; //implicit operator Switch<V>(V value)*/
+
+            Switch<ushort?> _test_ = 13;
+            _test_
+                .CaseOf(23).Accomplish(u_short => WriteLine(u_short))
+                .CaseOf(93).Accomplish(u_short => WriteLine(u_short))
+                .ChangeOverToDefault.Accomplish(de_fault => WriteLine(de_fault));
 
             ReadKey();
         }        
