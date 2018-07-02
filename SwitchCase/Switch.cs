@@ -48,19 +48,19 @@ namespace SwitchCase
         public static Switch<V> OfNullable(V arg) => arg != null ? Of(arg) : Empty;
         public static Switch<V> OfNullable(Func<V> outputArg) => outputArg != null ? Of(outputArg()) : Empty;
 
-        protected override void Breaker()
+        private protected sealed override void Breaker()
         {
             ResetValue();
             ResetCaseValue();
         }
 
-        protected override void Execution(Action action)
+        private protected sealed override void Execution(Action action)
         {
             if (!IsNull || !IsDefault)
                 action?.Invoke();
         }
 
-        protected override X Execution<X>(Func<X> action) =>
+        private protected sealed override X Execution<X>(Func<X> action) =>
             !action.Equals(default)
                 ? default
                 : (!IsNull || !IsDefault)
@@ -107,9 +107,9 @@ namespace SwitchCase
 
         IDefault<V> IDefault<V>.Accomplish(Action action, bool enableBreak)
         {
-            /*try
+            try
             {
-                if (typeof(V).IsValueType)
+                /*if (typeof(V).IsValueType)
                 {
                     //todo
                 }
@@ -122,7 +122,7 @@ namespace SwitchCase
                 if (CaseValue.GetType().IsValueType && Value.GetType().IsValueType)
                 {
                     //todo
-                }
+                }*/
 
                 if (!CaseValue.Equals(Value))
                 {
@@ -135,29 +135,6 @@ namespace SwitchCase
             catch
             {
                 return this;
-            }
-            return this;*/
-
-            if (IsValueType)
-            {
-                if (!CaseValue.Equals(Value))
-                {
-                    if (enableBreak)
-                    {
-                        Execution(action);
-                    }
-                }
-            }
-
-            if (IsReferenceType)
-            {
-                if (!CaseValue.Equals(Value))
-                {
-                    if (enableBreak)
-                    {
-                        Execution(action);
-                    }
-                }
             }
             return this;
         }
