@@ -13,18 +13,37 @@ namespace SwitchCase
     /// <remarks>
     /// Starting with C# 7.0, the match expression can be any non-null expression.
     /// </remarks>
-    internal sealed class Switch<V> :
+    public sealed partial class Switch<V> :
                                     AbstractSwitch<V>,
                                     ISwitch<V>,
                                     ICase<V>,
                                     IDefault<V>
+    {  
+        private Switch() { }
+        private Switch(V arg) => SwitchValue = arg;
+
+        public static implicit operator Switch<V>(V value) => OfNullable(value);
+    }
+
+    /// <summary>
+    /// This part of the class contains all kind of constants and fields to be declared
+    /// </summary>
+    /// <typeparam name="V"></typeparam>
+    public sealed partial class Switch<V>
     {
         private const bool const_true = !default(bool);
         private const bool const_false = default(bool);
 
         private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
         private Type genericType = typeof(Switch<>).GetGenericArguments().FirstOrDefault();
+    }
 
+    /// <summary>
+    /// This part of the class contains all kind of auxillary properties 
+    /// </summary>
+    /// <typeparam name="V"></typeparam>
+    public sealed partial class Switch<V>
+    {
         private Action ResetValue => () => SwitchValue = default;
         private Action ResetCaseValue => () => CaseValue = default;
         private Action ResetArgumentList => () => argsBuilder.Clear();
@@ -38,40 +57,27 @@ namespace SwitchCase
 
         private bool IsValueType => genericType.IsValueType;
         private bool IsReferenceType => !genericType.IsValueType;
+    }
 
-        private Switch() { }
-        private Switch(V arg) => SwitchValue = arg;
-
+    /// <summary>
+    /// This part of the class contains main entrant point to be computed henceforward
+    /// </summary>
+    /// <typeparam name="V"></typeparam>
+    public sealed partial class Switch<V>
+    {
         public static Switch<V> Empty { get; } = new Switch<V>(default);
 
         public static Switch<V> Of(V arg) => new Switch<V>(arg);
         public static Switch<V> OfNullable(V arg) => arg != null ? Of(arg) : Empty;
         public static Switch<V> OfNullable(Func<V> outputArg) => outputArg != null ? Of(outputArg()) : Empty;
+    }
 
-        private protected sealed override void Breaker()
-        {
-            ResetValue();
-            ResetCaseValue();
-        }
-
-        private protected sealed override void Execution(Action action)
-        {
-            ExecutionByCaseValue(v => action?.Invoke());
-        }
-
-        private void ExecutionByCaseValue(Action<V> actionByCaseValue)
-        {
-            if (!IsNull || !IsDefault)
-                actionByCaseValue?.Invoke(CaseValue);
-        }
-
-        private protected sealed override X Execution<X>(Func<X> action) =>
-            !action.Equals(default)
-                ? default
-                : (!IsNull || !IsDefault)
-                    ? action()
-                    : default;
-
+    /// <summary>
+    /// This part of the class contains entrant points for henceforward computation and execution
+    /// </summary>
+    /// <typeparam name="V"></typeparam>
+    public sealed partial class Switch<V>
+    {
         public ICase<V> CaseOf(V v)
         {
             if (!v.Equals(default))
@@ -90,7 +96,45 @@ namespace SwitchCase
                 return this;
             }
         }
+    }
 
+    /// <summary>
+    /// This part of the class contains main private service executable entities
+    /// </summary>
+    /// <typeparam name="V"></typeparam>
+    public sealed partial class Switch<V>
+    {
+        private protected sealed override void Breaker()
+        {
+            ResetValue();
+            ResetCaseValue();
+        }
+
+        private protected sealed override void Execution(Action action)
+        {
+            ExecutionByCaseValue(v => action?.Invoke());
+        }
+
+        private void ExecutionByCaseValue(Action<V> actionByCaseValue)
+        {
+            if (!IsNull || !IsDefault)
+                actionByCaseValue?.Invoke(CaseValue);
+        }
+
+        private protected sealed override X Execution<X>(Func<X> supplier) =>
+            !supplier.Equals(default)
+                ? default
+                : (!IsNull || !IsDefault)
+                    ? supplier()
+                    : default;
+    }
+
+    /// <summary>
+    /// This part of the class contains main executable entities
+    /// </summary>
+    /// <typeparam name="V"></typeparam>
+    public sealed partial class Switch<V>
+    {
         public ICase<V> Accomplish(Action action, bool enableBreak)
         {
             if (CaseValue.Equals(SwitchValue))
@@ -167,23 +211,32 @@ namespace SwitchCase
             return this;
         }
 
-        public X AccomplishDefault<X>(Func<X> action = default, bool enableBreak = const_true) =>
+        public X AccomplishDefault<X>(Func<X> supplier = default, bool enableBreak = const_true) =>
             CaseValue.Equals(SwitchValue)
                 ? default
                 : enableBreak
-                    ? Execution(action)
+                    ? Execution(supplier)
                     : default;
+    }
 
+    /// <summary>
+    /// This part of the class contains extra tools to be interacted with
+    /// </summary>
+    /// <typeparam name="V"></typeparam>
+    public sealed partial class Switch<V>
+    {
         public Switch<V> FullEntitiesReset()
         {
             if (!IsNull && !IsDefault)
             {
                 Breaker();
             }
+
             if (argsBuilder.Count > 0)
             {
                 ResetArgumentList();
             }
+
             return this;
         }
 
@@ -193,9 +246,17 @@ namespace SwitchCase
             {
                 action?.Invoke(SwitchValue);
             }
+
             return this;
         }
+    }
 
+    /// <summary>
+    /// This part of the class contains all kind of exctraction of information
+    /// </summary>
+    /// <typeparam name="V"></typeparam>
+    public sealed partial class Switch<V>
+    {
         public V GetSwitchValue() => SwitchValue;
         public V GetCaseValue() => CaseValue;
         public V GetCustomized(Func<V, V> funcCustom) => !IsNull || !IsDefault ? funcCustom(SwitchValue) : default;
@@ -204,7 +265,7 @@ namespace SwitchCase
         public ImmutableHashSet<V> GetCaseValuesAsImmutableSet() => argsBuilder.ToImmutableHashSet() ?? default;
         public ImmutableList<V> GetCaseValuesAsImmutableList() => argsBuilder.ToImmutable() ?? default;
         public ImmutableSortedSet<V> GetCaseValuesAsImmutableSortedSet() => argsBuilder.ToImmutableSortedSet() ?? default;
-        
+
         public void GetValuesAsTuple() // implement it properly 06/13/2018
         {
             GetCaseValuesAsImmutableList().ForEach(v => Console.WriteLine(v));
@@ -213,12 +274,10 @@ namespace SwitchCase
 
             V.ForEach(v => Console.WriteLine(v));
 
-            var ar = new List<int>(new int[] { 5, 7, 9 });            
+            var ar = new List<int>(new int[] { 5, 7, 9 });
             Tuple<List<int>> result = Tuple.Create(ar);
 
             Console.WriteLine(result.Item1);
         }
-
-        public static implicit operator Switch<V>(V value) => OfNullable(value);
     }
 }
