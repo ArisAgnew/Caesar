@@ -104,22 +104,19 @@ namespace SwitchCase
     /// <typeparam name="V"></typeparam>
     public sealed partial class Switch<V>
     {
-        private protected sealed override void Breaker()
-        {
-            ResetValue();
-            ResetCaseValue();
-        }
+        private protected sealed override void Breaker() => new Action(() => { ResetValue(); ResetCaseValue(); })?.Invoke();
 
-        private protected sealed override void Execution(Action action)
-        {
-            ExecutionByCaseValue(v => action?.Invoke());
-        }
+        private protected sealed override void Execution(Action action) => ExecutionBySwitchValue(v => action?.Invoke());
 
-        private void ExecutionByCaseValue(Action<V> actionByCaseValue)
-        {
+        private void ExecutionBySwitchValue(Action<V> actionBySwitchValue) => new Action(() => {
+            if (!IsNull || !IsDefault)
+                actionBySwitchValue?.Invoke(SwitchValue);
+        })?.Invoke();
+
+        private void ExecutionByCaseValue(Action<V> actionByCaseValue) => new Action(() => {
             if (!IsNull || !IsDefault)
                 actionByCaseValue?.Invoke(CaseValue);
-        }
+        })?.Invoke();
 
         private protected sealed override X Execution<X>(Func<X> supplier) =>
             !supplier.Equals(default)
@@ -200,7 +197,7 @@ namespace SwitchCase
                 {
                     if (enableBreak)
                     {
-                        ExecutionByCaseValue(action);
+                        ExecutionBySwitchValue(action);
                     }
                 }
             }

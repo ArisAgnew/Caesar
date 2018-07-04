@@ -50,9 +50,9 @@ namespace SwitchCase
 
             Switch<ushort?> _test_ = 13;
             _test_
-                .CaseOf(23).Accomplish(u_short => WriteLine(u_short))
-                .CaseOf(93).Accomplish(u_short => WriteLine(u_short))
-                .ChangeOverToDefault.Accomplish(de_fault => WriteLine(de_fault));
+                .CaseOf(23).Accomplish(() => WriteLine("twenty three"))
+                .CaseOf(83).Accomplish(u_short => WriteLine(u_short))
+                .ChangeOverToDefault.Accomplish(de_fault => WriteLine($"Default: {de_fault}"));
 
             ReadKey();
         }        
