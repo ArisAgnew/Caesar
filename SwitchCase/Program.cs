@@ -48,6 +48,14 @@ namespace SwitchCase
 
             Switch<ushort?> w = j; //implicit operator Switch<V>(V value)*/
 
+            {
+                Object a = null;
+                Object b = "not null";
+
+                WriteLine((a ?? "null :(").ToString());
+                WriteLine((b ?? default).ToString());
+            }
+
             Switch<ushort?> _test_ = 13;
             _test_
                 .CaseOf(23).Accomplish(() => WriteLine("twenty three"))

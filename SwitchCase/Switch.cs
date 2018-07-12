@@ -35,7 +35,8 @@ namespace SwitchCase
         private const bool const_false = default(bool);
 
         private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
-        private Type genericType = typeof(Switch<>).GetGenericArguments().FirstOrDefault();
+        private Type genericType = typeof(Switch<>).GetGenericArguments().OfType<Type>().FirstOrDefault();
+        
     }
 
     /// <summary>
@@ -46,7 +47,7 @@ namespace SwitchCase
     {
         private Action ResetValue => () => SwitchValue = default;
         private Action ResetCaseValue => () => CaseValue = default;
-        private Action ResetArgumentList => () => argsBuilder.Clear();
+        private Action ResetArgumentList => () => argsBuilder?.Clear();
 
         public V SwitchValue { get; set; } = default;
         public V CaseValue { get; set; } = default;
@@ -55,8 +56,8 @@ namespace SwitchCase
         private bool IsDefault => SwitchValue.Equals(default);
         private bool IsInterrupted => default;
 
-        private bool IsValueType => genericType.IsValueType;
-        private bool IsReferenceType => !genericType.IsValueType;
+        private bool IsValueType => (genericType ?? default).IsValueType;
+        private bool IsReferenceType => !(genericType ?? default).IsValueType;
     }
 
     /// <summary>
@@ -83,19 +84,12 @@ namespace SwitchCase
             if (!v.Equals(default))
             {
                 CaseValue = v;
-                argsBuilder.Add(v);
+                argsBuilder?.Add(v);
             }
             return this;
         }
 
-        public IDefault<V> ChangeOverToDefault
-        {
-            get
-            {
-                // some extra logic to be added later on
-                return this;
-            }
-        }
+        public IDefault<V> ChangeOverToDefault => this;
     }
 
     /// <summary>
@@ -138,13 +132,13 @@ namespace SwitchCase
             {
                 if (enableBreak)
                 {
-                    Execution(action);
+                    Execution(action ?? default);
                     Breaker();
                     return this;
                 }
                 else
                 {
-                    Execution(action);
+                    Execution(action ?? default);
                     return this;
                 }
             }
@@ -157,13 +151,13 @@ namespace SwitchCase
             {
                 if (enableBreak)
                 {
-                    ExecutionByCaseValue(action);
+                    ExecutionByCaseValue(action ?? default);
                     Breaker();
                     return this;
                 }
                 else
                 {
-                    ExecutionByCaseValue(action);
+                    ExecutionByCaseValue(action ?? default);
                     return this;
                 }
             }
@@ -178,7 +172,7 @@ namespace SwitchCase
                 {
                     if (enableBreak)
                     {
-                        Execution(action);
+                        Execution(action ?? default);
                     }
                 }
             }
@@ -197,7 +191,7 @@ namespace SwitchCase
                 {
                     if (enableBreak)
                     {
-                        ExecutionBySwitchValue(action);
+                        ExecutionBySwitchValue(action ?? default);
                     }
                 }
             }
@@ -229,7 +223,7 @@ namespace SwitchCase
                 Breaker();
             }
 
-            if (argsBuilder.Count > 0)
+            if (argsBuilder?.Count > 0)
             {
                 ResetArgumentList();
             }
