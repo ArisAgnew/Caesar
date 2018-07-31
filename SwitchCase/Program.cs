@@ -35,18 +35,18 @@ namespace SwitchCase
                 .CaseOf(Colour.Blue).Accomplish(() => WriteLine(nameof(Colour.Blue)), true)
                 .CaseOf(Colour.Green).Accomplish(() => WriteLine(nameof(Colour.Green)), false)
                 .CaseOf(Colour.Red).Accomplish(() => WriteLine(nameof(Colour.Red)))
-                .ChangeOverToDefault.Accomplish(() => WriteLine("Neither of them"));
+                .ChangeOverToDefault.Accomplish(() => WriteLine("Neither of them"));*/
 
             String str = ""; //resolve an issue of reading the object reference types 06/15/2018
-
-            Switch<string>.OfNullable(str)
+            
+            Switch<String>.OfNullable(str)
                 .CaseOf("I Am").Accomplish(() => WriteLine("=> I Am"))
                 .CaseOf("the way").Accomplish(() => WriteLine("=> the way"))
                 .CaseOf("You wish").Accomplish(() => WriteLine("=> You wish"))
-                .CaseOf("").Accomplish(() => WriteLine("=> Empty"))
-                .ChangeOverToDefault.Accomplish(() => WriteLine("Default str"));
+                .CaseOf("1234").Accomplish(() => WriteLine("=> Empty"))
+                .ChangeOverToDefault.Accomplish(() => WriteLine("EMPTY"));
 
-            Switch<ushort?> w = j; //implicit operator Switch<V>(V value)*/
+            /*Switch<ushort?> w = j; //implicit operator Switch<V>(V value)
 
             {
                 Object a = null;
@@ -60,7 +60,7 @@ namespace SwitchCase
             _test_
                 .CaseOf(23).Accomplish(() => WriteLine("twenty three"))
                 .CaseOf(83).Accomplish(u_short => WriteLine(u_short))
-                .ChangeOverToDefault.Accomplish(de_fault => WriteLine($"Default: {de_fault}"));
+                .ChangeOverToDefault.Accomplish(de_fault => WriteLine($"Default: {de_fault}"));*/
 
             ReadKey();
         }        

@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caesar", "Caesar\Caesar.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTestProject1", "XUnitTestProject1\XUnitTestProject1.csproj", "{B708D621-BDCE-4265-80BC-F6728EC2D795}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwitchCase", "SwitchCase\SwitchCase.csproj", "{AB2340B6-316B-4B63-9360-7770DA1DC9D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwitchCase", "SwitchCase\SwitchCase.csproj", "{AB2340B6-316B-4B63-9360-7770DA1DC9D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "__Test", "__Test\__Test.csproj", "{D5C92C2B-E5EF-4D60-9EAA-D5553952706D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{AB2340B6-316B-4B63-9360-7770DA1DC9D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB2340B6-316B-4B63-9360-7770DA1DC9D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB2340B6-316B-4B63-9360-7770DA1DC9D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5C92C2B-E5EF-4D60-9EAA-D5553952706D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5C92C2B-E5EF-4D60-9EAA-D5553952706D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5C92C2B-E5EF-4D60-9EAA-D5553952706D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5C92C2B-E5EF-4D60-9EAA-D5553952706D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
