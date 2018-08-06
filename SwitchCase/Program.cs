@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Reflection;
 using static System.Console;
 
 namespace SwitchCase
@@ -38,13 +39,11 @@ namespace SwitchCase
                 .CaseOf(Colour.Red).Accomplish(() => WriteLine(nameof(Colour.Red)))
                 .ChangeOverToDefault.Accomplish(() => WriteLine("Neither of them"));*/
 
-            String str = ""; //resolve an issue of reading the object reference types 06/15/2018
-            
-            Switch<String>.OfNullable(str)
+            string str = ""; //resolve an issue of reading the object reference types 06/15/2018
+
+            Switch<Object>.OfNullable(str)
                 .CaseOf("I Am").Accomplish(() => WriteLine("=> I Am"))
-                .CaseOf("the way").Accomplish(() => WriteLine("=> the way"))
-                .CaseOf("You wish").Accomplish(() => WriteLine("=> You wish"))
-                .CaseOf("").Accomplish(() => WriteLine("=> Empty"))
+                .CaseOf("3").Accomplish(() => WriteLine("=> Empty"))
                 .ChangeOverToDefault.Accomplish(() => WriteLine("EMPTY"));
 
             /*Switch<ushort?> w = j; //implicit operator Switch<V>(V value)
@@ -63,13 +62,13 @@ namespace SwitchCase
                 .CaseOf(83).Accomplish(u_short => WriteLine(u_short))
                 .ChangeOverToDefault.Accomplish(de_fault => WriteLine($"Default: {de_fault}"));*/
 
-            Switch<String>.OfNullable(str)
+            /*Switch<String>.OfNullable(str)
                 .CaseOf("I Am").Accomplish(() => WriteLine("=> I Am"))
                 .CaseOf("the way").Accomplish(() => WriteLine("=> the way"))
                 .ChangeOverToDefault.Accomplish(() => {
                     //ImmutableList.Create(10, 100, 1000).ForEach(i => WriteLine(i));
                     return "10, 100, 1000";
-                }).Depict();
+                }).Depict();*/
 
             ReadKey();
         }

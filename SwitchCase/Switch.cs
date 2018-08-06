@@ -38,8 +38,7 @@ namespace SwitchCase
         private Type genericType = typeof(Switch<>)
             .GetGenericArguments()
             .OfType<Type>()
-            .FirstOrDefault();
-        
+            .FirstOrDefault();        
     }
 
     /// <summary>
@@ -48,8 +47,28 @@ namespace SwitchCase
     /// <typeparam name="V"></typeparam>
     public sealed partial class Switch<V>
     {
-        private Action ResetValue => () => SwitchValue = default;
-        private Action ResetCaseValue => () => CaseValue = default;
+        private Action ResetValue => () => {
+            if (SwitchValue.GetType() == typeof(String) | 
+                SwitchValue.GetType() == typeof(Delegate) | 
+                SwitchValue.GetType() == typeof(Object))
+            {
+                return;
+            }
+            else
+                SwitchValue = default;
+        };
+
+        private Action ResetCaseValue => () => {
+            if (CaseValue.GetType() == typeof(String) | 
+                CaseValue.GetType() == typeof(Delegate) | 
+                CaseValue.GetType() == typeof(Object))
+            {
+                return;
+            }
+            else
+                CaseValue = default;
+        };
+
         private Action ResetArgumentList => () => argsBuilder?.Clear();
 
         public V SwitchValue { get; set; } = default;
@@ -169,38 +188,24 @@ namespace SwitchCase
 
         IDefault<V> IDefault<V>.Accomplish(Action action, bool enableBreak)
         {
-            try
+            if (!CaseValue.Equals(SwitchValue))
             {
-                if (!CaseValue.Equals(SwitchValue))
+                if (enableBreak)
                 {
-                    if (enableBreak)
-                    {
-                        Execution(action ?? default);
-                    }
+                    Execution(action ?? default);
                 }
-            }
-            catch
-            {
-                return this;
             }
             return this;
         }
 
         IDefault<V> IDefault<V>.Accomplish(Action<V> action, bool enableBreak)
         {
-            try
+            if (!CaseValue.Equals(SwitchValue))
             {
-                if (!CaseValue.Equals(SwitchValue))
+                if (enableBreak)
                 {
-                    if (enableBreak)
-                    {
-                        ExecutionBySwitchValue(action ?? default);
-                    }
+                    ExecutionBySwitchValue(action ?? default);
                 }
-            }
-            catch
-            {
-                return this;
             }
             return this;
         }
