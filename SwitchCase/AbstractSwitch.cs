@@ -8,6 +8,6 @@ namespace SwitchCase
     {
         private protected abstract void Breaker();
         private protected abstract void Execution(Action action);
-        private protected abstract X Execution<X>(Func<X> supplier);
+        private protected abstract V Execution(Func<V> supplier);
     }
 }

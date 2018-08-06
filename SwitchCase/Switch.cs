@@ -20,7 +20,7 @@ namespace SwitchCase
                                     IDefault<V>
     {  
         private Switch() { }
-        private Switch(V arg) => SwitchValue = arg;
+        private Switch(V arg) => SwitchValue = arg;        
 
         public static implicit operator Switch<V>(V value) => OfNullable(value);
     }
@@ -35,7 +35,10 @@ namespace SwitchCase
         private const bool const_false = default(bool);
 
         private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
-        private Type genericType = typeof(Switch<>).GetGenericArguments().OfType<Type>().FirstOrDefault();
+        private Type genericType = typeof(Switch<>)
+            .GetGenericArguments()
+            .OfType<Type>()
+            .FirstOrDefault();
         
     }
 
@@ -79,12 +82,12 @@ namespace SwitchCase
     /// <typeparam name="V"></typeparam>
     public sealed partial class Switch<V>
     {
-        public ICase<V> CaseOf(V v)
+        public ICase<V> CaseOf(V value)
         {
-            if (!v.Equals(default))
+            if (!value.Equals(default))
             {
-                CaseValue = v;
-                argsBuilder?.Add(v);
+                CaseValue = value;
+                argsBuilder?.Add(value);
             }
             return this;
         }
@@ -112,8 +115,8 @@ namespace SwitchCase
                 actionByCaseValue?.Invoke(CaseValue);
         })?.Invoke();
 
-        private protected sealed override X Execution<X>(Func<X> supplier) =>
-            !supplier.Equals(default)
+        private protected sealed override V Execution(Func<V> supplier) =>
+            supplier.Equals(default)
                 ? default
                 : (!IsNull || !IsDefault)
                     ? supplier()
@@ -202,7 +205,7 @@ namespace SwitchCase
             return this;
         }
 
-        public X AccomplishDefault<X>(Func<X> supplier = default, bool enableBreak = const_true) =>
+        V IDefault<V>.Accomplish(Func<V> supplier, bool enableBreak) => 
             CaseValue.Equals(SwitchValue)
                 ? default
                 : enableBreak
