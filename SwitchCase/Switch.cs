@@ -34,11 +34,7 @@ namespace SwitchCase
         private const bool const_true = !default(bool);
         private const bool const_false = default(bool);
 
-        private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();
-        private Type genericType = typeof(Switch<>)
-            .GetGenericArguments()
-            .OfType<Type>()
-            .FirstOrDefault();        
+        private ImmutableList<V>.Builder argsBuilder = ImmutableList.CreateBuilder<V>();      
     }
 
     /// <summary>
@@ -47,26 +43,13 @@ namespace SwitchCase
     /// <typeparam name="V"></typeparam>
     public sealed partial class Switch<V>
     {
-        private Action ResetValue => () => {
-            if (SwitchValue.GetType() == typeof(String) | 
-                SwitchValue.GetType() == typeof(Delegate) | 
-                SwitchValue.GetType() == typeof(Object))
+        private Action ResetValues => () => {            
+            if (IsValueType)
             {
-                return;
+                (SwitchValue, CaseValue) = (default, default);
             }
             else
-                SwitchValue = default;
-        };
-
-        private Action ResetCaseValue => () => {
-            if (CaseValue.GetType() == typeof(String) | 
-                CaseValue.GetType() == typeof(Delegate) | 
-                CaseValue.GetType() == typeof(Object))
-            {
                 return;
-            }
-            else
-                CaseValue = default;
         };
 
         private Action ResetArgumentList => () => argsBuilder?.Clear();
@@ -78,8 +61,7 @@ namespace SwitchCase
         private bool IsDefault => SwitchValue.Equals(default);
         private bool IsInterrupted => default;
 
-        private bool IsValueType => (genericType ?? default).IsValueType;
-        private bool IsReferenceType => !(genericType ?? default).IsValueType;
+        private bool IsValueType => (typeof(V) ?? default).IsValueType;
     }
 
     /// <summary>
@@ -120,7 +102,7 @@ namespace SwitchCase
     /// <typeparam name="V"></typeparam>
     public sealed partial class Switch<V>
     {
-        private protected sealed override void Breaker() => new Action(() => { ResetValue(); ResetCaseValue(); })?.Invoke();
+        private protected sealed override void Breaker() => ResetValues?.Invoke();
 
         private protected sealed override void Execution(Action action) => ExecutionBySwitchValue(v => action?.Invoke());
 

@@ -41,10 +41,16 @@ namespace SwitchCase
 
             string str = ""; //resolve an issue of reading the object reference types 06/15/2018
 
-            Switch<Object>.OfNullable(str)
+            Switch<String>.OfNullable(str)
                 .CaseOf("I Am").Accomplish(() => WriteLine("=> I Am"))
-                .CaseOf("3").Accomplish(() => WriteLine("=> Empty"))
+                .CaseOf("").Accomplish(() => WriteLine("=> Empty"))
                 .ChangeOverToDefault.Accomplish(() => WriteLine("EMPTY"));
+
+            Switch<ushort?> _test_ = 13;
+            _test_
+                .CaseOf(23).Accomplish(() => WriteLine("twenty three"))
+                .CaseOf(13).Accomplish(u_short => WriteLine(u_short))
+                .ChangeOverToDefault.Accomplish(de_fault => WriteLine($"Default: {de_fault}"));
 
             /*Switch<ushort?> w = j; //implicit operator Switch<V>(V value)
 
