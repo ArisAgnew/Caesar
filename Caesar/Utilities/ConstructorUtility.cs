@@ -10,19 +10,19 @@ namespace Caesar.Utilities
     {
         private static readonly ImmutableDictionary<Type, Type>.Builder SIMPLE_TYPES_TO_BE_USED =
             ImmutableDictionary<Type, Type>.Empty
-                .Add(typeof(SByte), typeof(sbyte))
-                .Add(typeof(Int16), typeof(short))
-                .Add(typeof(Int32), typeof(int))
-                .Add(typeof(Int64), typeof(long))
-                .Add(typeof(Byte), typeof(byte))
-                .Add(typeof(UInt16), typeof(ushort))
-                .Add(typeof(UInt32), typeof(uint))
-                .Add(typeof(UInt64), typeof(ulong))
-                .Add(typeof(Char), typeof(char))
-                .Add(typeof(Single), typeof(float))
-                .Add(typeof(Double), typeof(double))
-                .Add(typeof(Decimal), typeof(decimal))
-                .Add(typeof(Boolean), typeof(bool))
+                .Add(typeof(sbyte), typeof(sbyte))
+                .Add(typeof(short), typeof(short))
+                .Add(typeof(int), typeof(int))
+                .Add(typeof(long), typeof(long))
+                .Add(typeof(byte), typeof(byte))
+                .Add(typeof(ushort), typeof(ushort))
+                .Add(typeof(uint), typeof(uint))
+                .Add(typeof(ulong), typeof(ulong))
+                .Add(typeof(char), typeof(char))
+                .Add(typeof(float), typeof(float))
+                .Add(typeof(double), typeof(double))
+                .Add(typeof(decimal), typeof(decimal))
+                .Add(typeof(bool), typeof(bool))
                 .ToBuilder();
 
         private static bool MatchUpTo(List<Type> constructorTypes, List<Type> paramTypes)
@@ -80,7 +80,7 @@ namespace Caesar.Utilities
             {
                 List<Type> constructorTypes = _constructor.GetParameters().Select(par => par.ParameterType).ToList();
                 return constructorTypes.Count == paramTypes.Count && MatchUpTo(constructorTypes, paramTypes);
-            }).FirstOrDefault() ?? throw new MissingMethodException($"There is no constructor that convenient to parameter list {paramTypes}");
+            }).First() ?? throw new MissingMethodException($"There is no constructor that convenient to parameter list {paramTypes}");
 
             return constructorToBeFound; // it has to be done more properly! 09/17/2018
         }
