@@ -1,9 +1,10 @@
-﻿namespace Caesar
+﻿using System;
+
+namespace Caesar
 {
-    public interface IGetStep<THIS> where THIS : IGetStep<THIS>
+    public interface IGetStep<THIS>
     {
-        TOutput Get<TOutput>(Function<THIS, TOutput> function);
-        TOutput Get<TOutput>(Supplier<Function<THIS, TOutput>> functionSupplier);
-        TOutput Log<TOutput>(TOutput value);
+        TOutput Get<TOutput>(Func<THIS, TOutput> function);
+        TOutput Get<TOutput>(Action<Func<THIS, TOutput>> functionSupplier);
     }
 }

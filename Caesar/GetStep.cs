@@ -1,15 +1,20 @@
 ﻿using Caesar.AlternativeStuff;
+using System;
 
 namespace Caesar
 {
-    public class GetStep<T> : IGetStep<T> where T : GetStep<T>
+    public class GetStep<T> : IGetStep<T> where T : IGetStep<T>
     {
-        public TOutput Get<TOutput>(Function<T, TOutput> function) => 
-            Log(function.RequireNonNull("Function is not defined").Invoke((T) this)); //why DescribedFunction needs to check out
+        public TOutput Get<TOutput>(Func<T, TOutput> function)
+        {
+            IGetStep<T> getStep = this;
+            ref var _this = ref getStep;
+            return default;            
+        }
 
-        public TOutput Get<TOutput>(Supplier<Function<T, TOutput>> functionSupplier) =>
-            Get(functionSupplier.RequireNonNull("Supplier is not defined").Invoke());        
-
-        public TOutput Log<TOutput>(TOutput value) => value.RequireNonNull();
+        public TOutput Get<TOutput>(Action<Func<T, TOutput>> functionSupplier)
+        {
+            return default;
+        }
     }    
 }
