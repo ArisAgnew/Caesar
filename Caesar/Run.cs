@@ -14,7 +14,8 @@ namespace Caesar
     {
         static void Main()
         {
-            string[] strs = new string[] { "one", "two", "three", "four", "five" };
+            WriteLine(typeof(Byte).Name);            
+            /*string[] strs = new string[] { "one", "two", "three", "four", "five" };
             var (_, (a, b, c)) = Optional<string[]>.OfNullable(strs).Select(delegate (string[] array)
             {
                 return array.Where(each => each.Length > 3);
@@ -35,7 +36,7 @@ namespace Caesar
                 return array.Where(arr => arr.Length > 7);
             }).OrElseGetTupleCustomized(s => (s.Count(), s.ToList().Last()));
             WriteLine($"{l}, | {x}, | {y}");
-            ReadLine();
+            ReadLine();*/
 
             //Try.Run(() => UInt64.MaxValue)
             //IMy instance = (IMy)Activator.CreateInstance(typeof(IMy).GetProperties().GetType());

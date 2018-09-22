@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
@@ -43,7 +44,7 @@ namespace Caesar.Utilities
             
             return !default(bool);
         }
-
+                
         public static ConstructorInfo FindAppropriateConstructor(this Type clazz, params object[] listParams)
         {
             List<ConstructorInfo> constructors = new List<ConstructorInfo>(clazz.GetConstructors());
@@ -55,7 +56,7 @@ namespace Caesar.Utilities
                 return constructorTypes.Count == paramTypes.Count && MatchUpTo(constructorTypes, paramTypes);
             }).First() ?? throw new MissingMethodException($"There is no constructor that convenient to parameter list {paramTypes}");
 
-            return constructorToBeFound; // it has to be done more properly! 09/17/2018
+            return (ConstructorInfo) constructorToBeFound.Invoke(new object[] { }); // it has to be done more properly! 09/17/2018
         }
     }
 }

@@ -21,10 +21,19 @@ namespace Caesar.AlternativeStuff
         internal static T RequireNonNull<T>(this T input, Func<T, String, T> function, string message = default) =>
             function(input, message);
 
-        internal static (T, T) RequireNonNullAsWellAs<T>(this T input, T obj) =>
-            (input.RequireNonNull("First operand is null"), obj.RequireNonNull("Second operand is null"));
+        internal static (T, T) RequireNonNullAsWellAs<T>(this T input,
+                                                        T obj,
+                                                        string firstOperandMessage = "First operand is null",
+                                                        string secondOperandMessage = "Second operand is null") =>
+            (input.RequireNonNull(firstOperandMessage), obj.RequireNonNull(secondOperandMessage));
 
-        internal static (T, T) RequireNonNullAsWellAs<T>(this T input, T obj, Func<T, String, T> function) =>
-            (input.RequireNonNull(function, "First operand is null"), obj.RequireNonNull(function, "Second operand is null"));
+        internal static (T, T) RequireNonNullAsWellAs<T>(this T input,
+                                                        T obj,
+                                                        Func<T, String, T> function,
+                                                        string firstOperandMessage = "First operand is null",
+                                                        string secondOperandMessage = "Second operand is null") =>
+            (input.RequireNonNull(function, firstOperandMessage), obj.RequireNonNull(function, secondOperandMessage));
+
+        //TODO: implement method {RequireNonNull} that takes up param string[] as a second parameter
     }
 }
