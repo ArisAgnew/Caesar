@@ -2,9 +2,10 @@
 
 namespace Caesar
 {
-    public interface IPerformActionStep<THIS>
+    public interface IPerformActionStep<T>
     {
-        THIS Perform(Action<THIS> action);
-        THIS Perform(Func<Action<THIS>> actionSupplier);
+        T Perform(Action<T> action);
+        T Perform(in Action<T> action);
+        T Perform(Func<Action<T>> actionSupplier);
     }
 }

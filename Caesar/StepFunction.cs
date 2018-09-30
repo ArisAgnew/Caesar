@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Caesar
 {
-    internal class StepFunction
+    internal class StepFunction<T, R>
     {
+        public R Apply(T t) => default;
     }
 }

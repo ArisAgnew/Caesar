@@ -10,11 +10,41 @@ using System.Linq;
 
 namespace Caesar
 {
+    public class Check : PerformActionStep<Check>
+    {
+
+    }
+
+    public class Some : PerformActionStep<Some>
+    {
+
+    }
+
     class Run
     {
         static void Main()
         {
-            WriteLine(typeof(Byte).Name);            
+            PerformActionStep<Check> per = new PerformActionStep<Check>();
+            per.Perform(StoryWriter.Action<Check>("Some Desc", (check) => { }));
+
+
+            ReadKey();
+
+            StepAction<int> stepAction = new StepAction<int>();
+            //stepAction.Description = "sdsadsd";
+            stepAction.Action = (int it) => { };
+
+            var a = typeof(StepAction<int>)
+                    .GetProperties(BindingFlags.Public | BindingFlags.Instance)[1]
+                    .GetValue(stepAction) != default;
+
+            var c = typeof(StepAction<int>)
+                    .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .All(p => p.GetValue(stepAction) != default);
+
+            WriteLine(a);
+            WriteLine(c);
+            ReadKey();
             /*string[] strs = new string[] { "one", "two", "three", "four", "five" };
             var (_, (a, b, c)) = Optional<string[]>.OfNullable(strs).Select(delegate (string[] array)
             {

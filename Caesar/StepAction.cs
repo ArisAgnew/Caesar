@@ -10,6 +10,8 @@ using static System.String;
 
 namespace Caesar
 {
+    public delegate void TestDelegate<in T>(T obj);
+
     internal class StepAction<T>
     {
         private const string before_action_commentary = "before-action";
@@ -18,13 +20,11 @@ namespace Caesar
         private static readonly string comment = "It seems given consumer doesn't describe any before-action. Use method " +
                         "StoryWriter.action to describe the {0} or override the toString method";
 
-        StepAction() { }
+        [NotNull]
+        public string Description { get; set; }
 
         [NotNull]
-        public string Description { get; private set; }
-
-        [NotNull]
-        public Action<T> Action { get; private set; }
+        public Action<T> Action { get; set; }
 
         [NotNull]
         public bool IsComplex { get; private set; }
@@ -36,9 +36,9 @@ namespace Caesar
 
             return new StepAction<T>()
             {
-                Description = $"{before}.\n\t And then {after}",  
+                Description = $"{before}.\n\t And then {after}",
                 Action = t =>
-                {                    
+                {
                     before?
                     .ForwardCompose(after)?
                     .Invoke(t);
@@ -46,10 +46,14 @@ namespace Caesar
                 IsComplex = !default(bool)
             };
         }
-           
-        public void Invoke(T type)
+
+        public void Accept(T type)
         {
-            
+
         }
+
+        //public Action<T> ForwardCompose(Action<T> afterAction) => GetSequentialDescribedAction(?, afterAction);
+        
+        public override string ToString() => Description;
     }
 }
