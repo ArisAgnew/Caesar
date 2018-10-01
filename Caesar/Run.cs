@@ -12,12 +12,12 @@ namespace Caesar
 {
     public class Check : PerformActionStep<Check>
     {
-
+        public Check() { }         
     }
 
     public class Some : PerformActionStep<Some>
     {
-
+        public Some() { }
     }
 
     class Run
@@ -25,14 +25,19 @@ namespace Caesar
         static void Main()
         {
             PerformActionStep<Check> per = new PerformActionStep<Check>();
-            per.Perform(StoryWriter.Action<Check>("Some Desc", (check) => { }));
-
-
+            var ab = (Check)per;
+            WriteLine(ab);
             ReadKey();
 
-            StepAction<int> stepAction = new StepAction<int>();
-            //stepAction.Description = "sdsadsd";
-            stepAction.Action = (int it) => { };
+            per.Perform(StoryWriter.Action<Check>("Some Desc", (check) => { WriteLine("GOT IT!"); }));
+            
+            ReadKey();
+
+            StepAction<int> stepAction = new StepAction<int>
+            {
+                //stepAction.Description = "sdsadsd";
+                Action = (int it) => { }
+            };
 
             var a = typeof(StepAction<int>)
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)[1]

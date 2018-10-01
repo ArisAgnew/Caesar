@@ -10,8 +10,6 @@ using static System.String;
 
 namespace Caesar
 {
-    public delegate void TestDelegate<in T>(T obj);
-
     internal class StepAction<T>
     {
         private const string before_action_commentary = "before-action";
@@ -49,7 +47,7 @@ namespace Caesar
 
         public void Accept(T type)
         {
-
+            Action?.Invoke(type);
         }
 
         //public Action<T> ForwardCompose(Action<T> afterAction) => GetSequentialDescribedAction(?, afterAction);
