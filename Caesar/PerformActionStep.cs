@@ -9,29 +9,24 @@ namespace Caesar
     {
         public T Perform(Action<T> action)
         {
-            StepAction<T> stepAction = new StepAction<T>();
+            StepAction<T> stepAction = default;
             IPerformActionStep<T> performActionStep = this as T;
             ref var _this = ref performActionStep;
 
+            Action<T> intermediateAction = StoryWriter.Action(action.ToString(), action);
+            intermediateAction.Invoke((T)this);
+
             bool IsPropertyEstablished = typeof(StepAction<T>)
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .All(p => p.GetValue(stepAction) != default);
+                    .All(p => p.GetValue(new StepAction<T>()) != default);
 
-            try
+            if (!IsPropertyEstablished)
             {
-                action.RequireNonNull("Action is not defined").Invoke(this as T);                              
+                stepAction.RequireNonNull("StepAction is not defined").Accept(this as T);
             }
-            catch (Exception e)
-            {
 
-            }
-            finally
-            {
-                if (IsPropertyEstablished)
-                {
-                    stepAction.RequireNonNull("StepAction is not defined").Accept(this as T);
-                }
-            }
+            //action.RequireNonNull("Action is not defined").Invoke(this as T);                              
+            
             return this as T;
         }
 

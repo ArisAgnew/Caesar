@@ -25,10 +25,6 @@ namespace Caesar
         static void Main()
         {
             PerformActionStep<Check> per = new PerformActionStep<Check>();
-            var ab = (Check)per;
-            WriteLine(ab);
-            ReadKey();
-
             per.Perform(StoryWriter.Action<Check>("Some Desc", (check) => { WriteLine("GOT IT!"); }));
             
             ReadKey();
