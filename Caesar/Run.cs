@@ -7,6 +7,7 @@ using static System.Console;
 using static System.Boolean;
 using System.Reflection;
 using System.Linq;
+using Caesar.FactoryAssembly;
 
 namespace Caesar
 {
@@ -24,6 +25,13 @@ namespace Caesar
     {
         static void Main()
         {
+            Action<int> actint = i1 => Write(i1 + 5);
+            Action<int> actint1 = i1 => Write(i1 + 5);
+            Action<string> actstr = s => Write(s);
+
+            actint.ForwardCompose(actstr);
+            actint.ForwardCompose<int>(actint1);
+
             PerformActionStep<Check> per = new PerformActionStep<Check>();
             per.Perform(StoryWriter.Action<Check>("Some Desc", (check) => { WriteLine("GOT IT!"); }));
             
