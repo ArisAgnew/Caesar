@@ -38,7 +38,7 @@ namespace Caesar
                 Action = t =>
                 {
                     before?
-                    .ForwardCompose(after)?
+                    .ForwardCompose<T>(after)?
                     .Invoke(t);
                 },
                 IsComplex = !default(bool)
