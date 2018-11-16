@@ -10,13 +10,20 @@ using static System.String;
 
 namespace Caesar
 {
-    internal class StepAction<T>
+    public class StepAction<T>
     {
         private const string before_action_commentary = "before-action";
         private const string after_action_commentary = "before-action";
 
         private static readonly string comment = "It seems given consumer doesn't describe any before-action. Use method " +
                         "StoryWriter.action to describe the {0} or override the toString method";
+
+        public void Deconstruct(out string description, out Action<T> action, out bool isComplex)
+        {
+            description = Description;
+            action = Action;
+            isComplex = IsComplex;
+        }
 
         [NotNull]
         public string Description { get; set; }
@@ -37,9 +44,7 @@ namespace Caesar
                 Description = $"{before}.\n\t And then {after}",
                 Action = t =>
                 {
-                    before?
-                    .ForwardCompose(after)?
-                    .Invoke(t);
+                    before?.ForwardCompose<T>(after)?.Invoke(t); //todo?
                 },
                 IsComplex = !default(bool)
             };

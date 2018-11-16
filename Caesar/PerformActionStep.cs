@@ -5,28 +5,22 @@ using Caesar.AlternativeStuff;
 
 namespace Caesar
 {
-    public class PerformActionStep<T> : IPerformActionStep<T> where T : PerformActionStep<T>, new()
+    public class PerformActionStep<T> : IPerformActionStep<T> where T : PerformActionStep<T>
     {
         public T Perform(Action<T> action)
         {
-            StepAction<T> stepAction = default;
-            IPerformActionStep<T> performActionStep = this as T;
-            ref var _this = ref performActionStep;
-
-            Action<T> intermediateAction = StoryWriter.Action(action.ToString(), action);
-            intermediateAction.Invoke((T)this);
+            var _this = this as T;
+            (StepAction<T> stepAction, Action<T> intermediateAction) = StoryWriter.Action(action.ToString(), action);
 
             bool IsPropertyEstablished = typeof(StepAction<T>)
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .All(p => p.GetValue(new StepAction<T>()) != default);
+                    .All(p => p.GetValue(stepAction) != default);
 
-            if (!IsPropertyEstablished)
+            if (IsPropertyEstablished)
             {
-                stepAction.RequireNonNull("StepAction is not defined").Accept(this as T);
+                stepAction.RequireNonNull("StepAction is not defined").Accept(_this);
             }
 
-            //action.RequireNonNull("Action is not defined").Invoke(this as T);                              
-            
             return this as T;
         }
 

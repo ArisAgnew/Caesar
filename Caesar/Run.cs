@@ -5,15 +5,17 @@ using System.Text;
 
 using static System.Console;
 using static System.Boolean;
+using static Caesar.StoryWriter;
 using System.Reflection;
 using System.Linq;
 using Caesar.FactoryAssembly;
+using System.Collections.Immutable;
 
 namespace Caesar
 {
     public class Check : PerformActionStep<Check>
     {
-        public Check() { }         
+                   
     }
 
     public class Some : PerformActionStep<Some>
@@ -23,17 +25,25 @@ namespace Caesar
 
     class Run
     {
+        enum Range : long { Max = 2147483648L, Min = 255L };
+
         static void Main()
         {
-            Action<int> actint = i1 => Write(i1 + 5);
+
+            /*Action<int> actint = i1 => Write(i1 + 5);
             Action<int> actint1 = i1 => Write(i1 + 5);
             Action<string> actstr = s => Write(s);
 
             actint.ForwardCompose(actstr);
-            actint.ForwardCompose<int>(actint1);
+            actint.ForwardCompose<int>(actint1);*/
 
-            PerformActionStep<Check> per = new PerformActionStep<Check>();
-            per.Perform(StoryWriter.Action<Check>("Some Desc", (check) => { WriteLine("GOT IT!"); }));
+            var ch = new Check();
+
+            (_, var consumer) = Action<Check>(string.Empty, check => { WriteLine($"GOT IT! {check}, We are the ones who we are"); });
+
+            ch.Perform(check => WriteLine($"GOT IT through lambda! {check}"))
+                .Perform(delegate (Check check) { WriteLine($"GOT IT through delegate! {check}"); })
+                .Perform(consumer);
             
             ReadKey();
 

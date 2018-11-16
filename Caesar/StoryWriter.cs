@@ -6,15 +6,15 @@ namespace Caesar
 {
     public sealed class StoryWriter
     {
-        public static Action<T> Action<T>(string description, Action<T> action)
+        public static (StepAction<T>, Action<T>) Action<T>(string description, Action<T> action)
         {
-            return _action => {
-                new StepAction<T>()
-                {
-                    Description = description,
-                    Action = action
-                };
+            var stepAction = new StepAction<T>()
+            {
+                Description = description,
+                Action = action
             };
+
+            return (stepAction, action);
         }
 
         public static Func<I, O> ToGet<I, O>(string description, Func<I, O> func)
