@@ -43,8 +43,8 @@ namespace Caesar
 
             ch.Perform(check => WriteLine($"GOT IT through lambda! {check}"))
                 .Perform(delegate (Check check) { WriteLine($"GOT IT through delegate! {check}"); })
-                .Perform(consumer);
-            
+                .Perform(Action<Check>("", check1 => { WriteLine("Ruthless and Viciousness"); }));
+
             ReadKey();
 
             StepAction<int> stepAction = new StepAction<int>

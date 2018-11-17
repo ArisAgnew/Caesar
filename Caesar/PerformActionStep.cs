@@ -1,32 +1,39 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using Caesar.AlternativeStuff;
+
+using static Caesar.StoryWriter;
+using static System.Reflection.BindingFlags;
 
 namespace Caesar
 {
     public class PerformActionStep<T> : IPerformActionStep<T> where T : PerformActionStep<T>
-    {
+    {        
         public T Perform(Action<T> action)
         {
-            var _this = this as T;
-            (StepAction<T> stepAction, Action<T> intermediateAction) = StoryWriter.Action(action.ToString(), action);
+            (StepAction<T> stepAction, Action<T> _action) = Action(action?.ToString(), action);
 
             bool IsPropertyEstablished = typeof(StepAction<T>)
-                    .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .GetProperties(Public | Instance)
                     .All(p => p.GetValue(stepAction) != default);
 
             if (IsPropertyEstablished)
             {
-                stepAction.RequireNonNull("StepAction is not defined").Accept(_this);
+                stepAction.RequireNonNull($"{nameof(stepAction)} is not defined").Accept(this as T);
             }
 
-            return this as T;
+            return this as T ?? default;
+        }
+
+        public T Perform((dynamic, Action<T>) actionTuple)
+        {
+            var (_, consumer) = actionTuple.RequireNonNull($"{nameof(actionTuple)} is not defined");
+            return Perform(consumer);
         }
 
         public T Perform(in Action<T> action) => Perform(action);        
 
         public T Perform(Func<Action<T>> actionSupplier) => 
-            Perform(actionSupplier.RequireNonNull("Supplier of action was not defined").Invoke());        
+            Perform(actionSupplier.RequireNonNull($"{nameof(actionSupplier)} was not defined")?.Invoke());        
     }
 }

@@ -17,11 +17,20 @@ namespace Caesar
             return (stepAction, action);
         }
 
-        public static Func<I, O> ToGet<I, O>(string description, Func<I, O> func)
+        public static (StepFunction<In, Out>, Func<In, Out>) ToGet<In, Out>(string description, Func<In, Out> function)
         {
-            return _input => {
-                return default;
+            var stepFunction = new StepFunction<In, Out>()
+            {
+                Description = description,
+                Function = function
             };
+
+            return (stepFunction, function);
+        }
+
+        public static (dynamic, Predicate<T>) Condition<T>(string description, Predicate<T> predicate)
+        {
+            return (default, default);
         }
     }
 }

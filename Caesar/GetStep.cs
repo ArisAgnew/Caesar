@@ -1,34 +1,38 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using Caesar.AlternativeStuff;
+
+using static Caesar.StoryWriter;
+using static System.Reflection.BindingFlags;
 
 namespace Caesar
 {
-    public class GetStep<T> : IGetStep<T> where T : IGetStep<T>
+    public class GetStep<T> : IGetStep<T> where T : GetStep<T>
     {
         public R Get<R>(Func<T, R> function)
         {
-            StepFunction<T, R> stepFunction = default;
-            IGetStep<T> getStep = this;
-            ref var _this = ref getStep;
+            (StepFunction<T, R> stepFunction, Func<T, R> _function) = ToGet(function?.ToString(), function);
 
             bool IsPropertyEstablished = typeof(StepFunction<T, R>)
-                    .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .GetProperties(Public | Instance)
                     .All(p => p.GetValue(stepFunction) != default);
 
             if (IsPropertyEstablished)
             {
-                stepFunction.RequireNonNull("StepFunction is not defined").Apply((T)_this);
+                return stepFunction.RequireNonNull($"{nameof(stepFunction)} is not defined").Apply(this as T);
             }
+            else return default;                       
+        }
 
-            function.RequireNonNull("Function is not defined").Invoke((T)_this);
-            return default;            
+        public R Get<R>((dynamic, Func<T, R>) functionTuple)
+        {
+            var (_, function) = functionTuple.RequireNonNull($"{nameof(functionTuple)} is not defined");
+            return Get(function);
         }
 
         public R Get<R>(in Func<T, R> function) => Get(function);
 
         public R Get<R>(Func<Func<T, R>> functionSupplier) =>
-            Get(functionSupplier.Invoke());
+            Get(functionSupplier.RequireNonNull($"{nameof(functionSupplier)} was not defined")?.Invoke());
     }    
 }

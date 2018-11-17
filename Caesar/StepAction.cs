@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Caesar.AlternativeStuff;
 using Caesar.FactoryAssembly;
 using JetBrains.Annotations;
-using Caesar.Utilities;
 
 using static System.String;
 
@@ -52,10 +49,11 @@ namespace Caesar
 
         public void Accept(T type)
         {
+            //todo
             Action?.Invoke(type);
         }
 
-        //public Action<T> ForwardCompose(Action<T> afterAction) => GetSequentialDescribedAction(?, afterAction);
+        //public Action<T> ForwardCompose(Action<T> afterAction) => GetSequentialDescribedAction(?, afterAction); //todo
         
         public override string ToString() => Description;
     }

@@ -13,8 +13,8 @@ namespace Caesar.Utilities
             if (toBeDescribed == default)
                 return default;            
 
-            return !string.IsNullOrEmpty(stringDescription) 
-                && !stringDescription.Equals($"{toBeDescribed.GetType().Name} | {Parse(stringDescription).ToString("X8")}");
+            return !string.IsNullOrEmpty(stringDescription) && 
+                !stringDescription.Equals($"{toBeDescribed.GetType().Name} | {Parse(stringDescription).ToString("X8")}");
         }
 
         public static bool IsDescribed<T>(this Action<T> toBeDescribed) => toBeDescribed.IsDescribed();   
