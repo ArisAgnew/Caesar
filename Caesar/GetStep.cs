@@ -21,7 +21,7 @@ namespace Caesar
             {
                 return stepFunction.RequireNonNull($"{nameof(stepFunction)} is not defined").Apply(this as T);
             }
-            else return default;                       
+            else return default;
         }
 
         public R Get<R>((dynamic, Func<T, R>) functionTuple)

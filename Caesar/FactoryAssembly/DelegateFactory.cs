@@ -11,6 +11,6 @@
 
     public delegate bool BiPredicate<in T1Input, in T2Input>(T1Input t1Input, T2Input t2Input);
 
-    public delegate TOutput Supplier<out TOutput>();
+    public delegate TOutput PrincipalSupplier<out TOutput>();
     public delegate bool BooleanSupplier();
 }

@@ -22,7 +22,7 @@ namespace Caesar
                 stepAction.RequireNonNull($"{nameof(stepAction)} is not defined").Accept(this as T);
             }
 
-            return this as T ?? default;
+            return this as T;
         }
 
         public T Perform((dynamic, Action<T>) actionTuple)
