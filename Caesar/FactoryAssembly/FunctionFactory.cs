@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Caesar.AlternativeStuff;
 
 namespace Caesar.FactoryAssembly

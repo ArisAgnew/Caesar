@@ -29,13 +29,16 @@ namespace Caesar
 
         static void Main()
         {
+            Func<short, short, short> func1 = (q, j) => (short) ((q + j));
+            Func<short, short, short> func2 = (q, j) => (short) ((q + j)*2);
+            
+            WriteLine(func1.ForwardCompose(l => (short)(l * 2)).Invoke(5, 123));
+            WriteLine(func1.ForwardComposeFull(func2).Invoke(5, 123));
 
-            /*Action<int> actint = i1 => Write(i1 + 5);
-            Action<int> actint1 = i1 => Write(i1 + 5);
-            Action<string> actstr = s => Write(s);
-
-            actint.ForwardCompose(actstr);
-            actint.ForwardCompose<int>(actint1);*/
+            WriteLine(new Func<short, short>(l => (short)(l * 2)).BackwardCompose(func1).Invoke(5, 5));
+            WriteLine(func1.BackwardComposeFull(func2).Invoke(5, 5));
+            
+            ReadKey();
 
             var ch = new Check();
 
