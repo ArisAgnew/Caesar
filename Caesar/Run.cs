@@ -44,7 +44,7 @@ namespace Caesar
 
             (_, var consumer) = Action<Check>(string.Empty, check => { WriteLine($"GOT IT! {check}, We are the ones who we are"); });
 
-            ch.Perform(check => WriteLine($"GOT IT through lambda! {check}"))
+            ch.Perform(check => WriteLine($"GOT IT through lambdsa! {check}"))
                 .Perform(delegate (Check check) { WriteLine($"GOT IT through delegate! {check}"); })
                 .Perform(Action<Check>("", check1 => { WriteLine("Ruthless and Viciousness"); }));
 

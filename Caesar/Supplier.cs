@@ -5,8 +5,8 @@ namespace Caesar
 {
     public class Supplier<T> : ISupplier<T>
     {
-        public Func<T> SupplierProperty { get; set; }
+        public Func<T> SupplierFeature { get; set; }
 
-        public T Get() => SupplierProperty.RequireNonNull($"{nameof(SupplierProperty)} is not defined")();
+        public T Get() => SupplierFeature.RequireNonNull($"{nameof(SupplierFeature)} is not defined")();
     }
 }
