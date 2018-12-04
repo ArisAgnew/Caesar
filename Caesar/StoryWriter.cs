@@ -30,7 +30,14 @@ namespace Caesar
 
         public static (dynamic, Predicate<T>) Condition<T>(string description, Predicate<T> predicate)
         {
-            return (default, default);
+            var condition = new Condition<T>()
+            {
+                Predicate = predicate
+            };
+
+            //condition.Test(t);
+            
+            return (condition, predicate);
         }
     }
 }

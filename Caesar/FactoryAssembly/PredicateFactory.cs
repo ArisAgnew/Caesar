@@ -30,7 +30,7 @@ namespace Caesar.FactoryAssembly
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate"></param>
         /// <returns>Inversion/negation of this Predicate</returns>
-        public static Predicate<T> Negate<T>(this Predicate<T> predicate) =>
+        public static Predicate<T> Not<T>(this Predicate<T> predicate) =>
             (T type) => (bool) !predicate?.Invoke(type);
 
         /// <summary>

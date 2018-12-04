@@ -1,13 +1,17 @@
 ﻿using System;
 using Caesar.AlternativeStuff;
+using JetBrains.Annotations;
 
 namespace Caesar.Properties
 {
     public abstract class PropertySupplier<T> : IPropertySupplier<T>, ISupplier<T>
     {
+        [NotNull]
         public Action<string> Action { get; set; }
+
+        [NotNull]
         public Func<T> Supplier { get; set; }
-        
+                
         public string GetPropertyValue
         {
             get
@@ -17,6 +21,7 @@ namespace Caesar.Properties
             }
         }
 
+        [NotNull]
         public abstract string GetPropertyName { get; }
 
         protected internal Optional<string> ReturnOptionalFromEnvironment() => GetPropertyValue;
@@ -24,7 +29,7 @@ namespace Caesar.Properties
         public void Accept(in string value)
         {
             //todo 11/26/2018
-            Action?.Invoke(value);
+            Action?.Invoke(value.RequireNonNull($"New value of the {GetPropertyName} should not be blank"));
         }
 
         public T Get() => Supplier.RequireNonNull($"{nameof(Supplier)} is not defined")();
