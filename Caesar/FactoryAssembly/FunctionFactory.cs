@@ -1,5 +1,4 @@
 ﻿using System;
-using Caesar.AlternativeStuff;
 
 namespace Caesar.FactoryAssembly
 {
@@ -7,33 +6,37 @@ namespace Caesar.FactoryAssembly
     public static class FunctionFactory
     {
         /// <summary>
-        /// 
+        /// This method combines a regular function in company with another one regular function.
+        /// The <paramref name="before"/> function is applied first, then
+        /// The <paramref name="after"/> function is applied second
         /// </summary>
-        /// <typeparam name="TInput"></typeparam>
-        /// <typeparam name="TIntermediate"></typeparam>
-        /// <typeparam name="TOutput"></typeparam>
+        /// <typeparam name="In"></typeparam>
+        /// <typeparam name="Mid"></typeparam>
+        /// <typeparam name="Out"></typeparam>
         /// <param name="after"></param>
         /// <param name="before"></param>
         /// <returns></returns>
-        public static Func<TInput, TOutput> BackwardCompose<TInput, TIntermediate, TOutput>            
-            (this Func<TIntermediate, TOutput> after, Func<TInput, TIntermediate> before) => 
-            (TInput input) => after.RequireNonNull().Invoke(before.RequireNonNull().Invoke(input));
+        public static Func<Out, Mid> BackwardCompose<In, Mid, Out>
+            (this Func<In, Mid> after, Func<Out, In> before) =>
+            (Out input) => after.Invoke(before.Invoke(input));
 
         /// <summary>
-        /// 
+        /// This method combines a regular function in company with another one regular function.
+        /// The <paramref name="before"/> function is applied first, then
+        /// The <paramref name="after"/> function is applied second
         /// </summary>
-        /// <typeparam name="TInput"></typeparam>
-        /// <typeparam name="TIntermediate"></typeparam>
-        /// <typeparam name="TOutput"></typeparam>
+        /// <typeparam name="In"></typeparam>
+        /// <typeparam name="Mid"></typeparam>
+        /// <typeparam name="Out"></typeparam>
         /// <param name="before"></param>
         /// <param name="after"></param>
         /// <returns></returns>
-        public static Func<TInput, TOutput> ForwardCompose<TInput, TIntermediate, TOutput>
-            (this Func<TInput, TIntermediate> before, Func<TIntermediate, TOutput> after) => 
-            (TInput input) => after.BackwardCompose(before).Invoke(input);
-        
+        public static Func<In, Out> ForwardCompose<In, Mid, Out>
+            (this Func<In, Mid> before, Func<Mid, Out> after) =>
+            (In input) => after.Invoke(before.Invoke(input));
+
         /// <summary>
-        /// 
+        /// This method that always returns its input parameter/argument
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
