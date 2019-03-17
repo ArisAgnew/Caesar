@@ -1,15 +1,12 @@
-﻿using Caesar.AlternativeStuff;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Caesar.FactoryAssembly;
 
-using static System.Console;
-using static System.Boolean;
-using static Caesar.StoryWriter;
-using System.Reflection;
+using System;
 using System.Linq;
-using Caesar.FactoryAssembly;
-using System.Collections.Immutable;
+using System.Reflection;
+
+using static Caesar.StoryWriter;
+using static System.Boolean;
+using static System.Console;
 
 namespace Caesar
 {

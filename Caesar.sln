@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caesar", "Caesar\Caesar.csproj", "{98CA0DC2-9C48-4669-B02B-0A4D37E78282}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaesarCore", "Caesar\CaesarCore.csproj", "{98CA0DC2-9C48-4669-B02B-0A4D37E78282}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumCore", "SeleniumCore\SeleniumCore.csproj", "{37F9EB9C-7F42-48E7-A917-31494CA29A4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{98CA0DC2-9C48-4669-B02B-0A4D37E78282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98CA0DC2-9C48-4669-B02B-0A4D37E78282}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98CA0DC2-9C48-4669-B02B-0A4D37E78282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37F9EB9C-7F42-48E7-A917-31494CA29A4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37F9EB9C-7F42-48E7-A917-31494CA29A4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37F9EB9C-7F42-48E7-A917-31494CA29A4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37F9EB9C-7F42-48E7-A917-31494CA29A4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

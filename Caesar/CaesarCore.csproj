@@ -4,7 +4,9 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
-    <StartupObject />
+    <StartupObject>Caesar.Run</StartupObject>
+    <AssemblyName>CaesarCore</AssemblyName>
+    <RootNamespace>CaesarCore</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
