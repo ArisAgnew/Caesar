@@ -1,6 +1,8 @@
-﻿using System;
-using Caesar.AlternativeStuff;
+﻿using Caesar.AlternativeStuff;
+
 using JetBrains.Annotations;
+
+using System;
 
 namespace Caesar.Properties
 {

@@ -1,7 +1,9 @@
-﻿using System;
-using Caesar.AlternativeStuff;
+﻿using Caesar.AlternativeStuff;
 using Caesar.FactoryAssembly;
+
 using JetBrains.Annotations;
+
+using System;
 
 using static System.String;
 

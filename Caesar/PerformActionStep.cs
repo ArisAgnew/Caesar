@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Caesar.AlternativeStuff;
+
+using System;
 using System.Linq;
-using Caesar.AlternativeStuff;
 
 using static Caesar.StoryWriter;
 using static System.Reflection.BindingFlags;
@@ -34,6 +35,6 @@ namespace Caesar
         public T Perform(in Action<T> action) => Perform(action);        
 
         public T Perform(Func<Action<T>> actionSupplier) => 
-            Perform(actionSupplier.RequireNonNull($"{nameof(actionSupplier)} was not defined")?.Invoke());        
+            Perform(actionSupplier.RequireNonNull($"{nameof(actionSupplier)} was not defined").Invoke());        
     }
 }

@@ -9,7 +9,8 @@ namespace SeleniumCore
     {
         static void Main(string[] args)
         {
-            
+            IWrapsDriver wrapsDriver = default;
+            IWrapsElement wrapsElement = default;
         }
     }
 }

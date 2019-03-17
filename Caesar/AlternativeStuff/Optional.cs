@@ -1,5 +1,4 @@
-﻿using Caesar.FactoryAssembly;
-using System;
+﻿using System;
 
 namespace Caesar.AlternativeStuff
 {

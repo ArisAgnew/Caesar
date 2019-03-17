@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Caesar.AlternativeStuff;
+
+using System;
 using System.Linq;
-using Caesar.AlternativeStuff;
 
 using static Caesar.StoryWriter;
 using static System.Reflection.BindingFlags;
@@ -33,6 +34,6 @@ namespace Caesar
         public R Get<R>(in Func<T, R> function) => Get(function);
 
         public R Get<R>(Func<Func<T, R>> functionSupplier) =>
-            Get(functionSupplier.RequireNonNull($"{nameof(functionSupplier)} was not defined")?.Invoke());
+            Get(functionSupplier.RequireNonNull($"{nameof(functionSupplier)} was not defined").Invoke());
     }    
 }

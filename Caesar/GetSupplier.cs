@@ -1,7 +1,4 @@
 ﻿using Caesar.AlternativeStuff;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Caesar
 {
@@ -16,7 +13,9 @@ namespace Caesar
 
         public override string ToString()
         {
-            return Optional<Function<T, R>>.OfNullable(function).Select(func => func.ToString()).OrElse(string.Empty);
+            return Optional<Function<T, R>>.OfNullable(function)
+                .Select(func => func.ToString())
+                .OrElse(string.Empty);
         }
     }
 }
